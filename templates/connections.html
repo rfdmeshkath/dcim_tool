@@ -1,0 +1,28 @@
+{% extends "base_template.html" %}
+
+{% block title %} Home {% endblock %}
+
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block content %}
+
+{% block current_page %} Connections {% endblock %}
+
+<main class="cd-main-content">
+    <center>
+        <div class="container">
+            <br><br><br><br>
+            <form action='/connections' class="form" method="POST">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="searched_item" placeholder="Device Name">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </center>
+</main>
+
+{% endblock %}
+

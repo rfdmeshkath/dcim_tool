@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+    {% block head %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,600,700' rel='stylesheet' type='text/css'>
+    <link href="{{ url_for('static',filename='css/base.css') }}" rel="stylesheet"/>
+    <link href="{{ url_for('static',filename='css/ForceDirected.css') }}" rel="stylesheet"/>
+    <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet"/>
+    <link href="{{ url_for('static',filename='css/bootstrap.css') }}" rel="stylesheet"/>
+
+    <link href="{{ url_for('static',filename='css/reset.css') }}" rel="stylesheet"/><!-- Custom CSS -->
+    <link href="{{ url_for('static',filename='css/style.css') }}" rel="stylesheet"/><!-- Custom CSS -->
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/modernizr.js') }}"></script>
+    <link rel="stylesheet" href="http://cdn.pydata.org/bokeh/release/bokeh-0.12.2.min.css" type="text/css"/>
+    <script type="text/javascript" src="http://cdn.pydata.org/bokeh/release/bokeh-0.12.2.min.js"></script>
+    <title>{% block title %}{% endblock %} - DCIM</title>
+    {% endblock %}
+</head>
+<body>
+<header>
+    <div id="cd">DCIM > {% block current_page %}{% endblock %}</div>
+    <nav id="cd-top-nav">
+        <nav class="session_name">Hi &nbsp;&nbsp; {{ user_name }}</nav>
+    </nav>
+    <a id="cd-menu-trigger" href="#0"><span class="cd-menu-text">Menu</span><span class="cd-menu-icon"></span></a>
+</header>
+{% block content %}{% endblock %}
+
+<nav id="cd-lateral-nav">
+    <ul class="cd-navigation cd-single-item-wrapper">
+        <li><a class="current" href="/">Home</a></li>
+        <li><a href="/connections">Connections</a></li>
+    </ul>
+</nav>
+
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/excanvas.js') }}"></script>
+<!-- JIT Library File -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/filesaver.js') }}"></script>
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/jit.js') }}"></script>
+</body>
+
+</html>
