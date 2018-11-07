@@ -17,9 +17,9 @@ def send_email(user, pwd, recipient, subject, body):
     server.login(user, pwd)
     server.sendmail(FROM, TO, message)
     server.close()
-    print('successfully sent the mail')
+    print('successfully sent the alerts')
     # except:
-    #     print ("failed to send mail")
+    #     print ("failed to send alerts")
 
 
 for i in range(0, 1):
