@@ -147,7 +147,7 @@ header {
     left: 0;
     height: 50px;
     width: 100%;
-    background: #66BB6A;
+    background: #7e60ac;
     z-index: 3;
     /* Force Hardware Acceleration in WebKit */
 
@@ -257,7 +257,7 @@ ul.a {
     top: 0;
     height: 100%;
     width: 50px;
-    background-color: #66BB6A;
+    background-color: #7e60ac;
 }
 
 #cd-menu-trigger .cd-menu-text {
@@ -365,7 +365,7 @@ ul.a {
 
     z-index: 1;
     width: 260px;
-    background-color: #388E3C;
+    background-color: #7e60ac;
     overflow-y: auto;
     /* Force Hardware Acceleration in WebKit */
 
@@ -400,7 +400,7 @@ ul.a {
 }
 
 #cd-lateral-nav a.current {
-    background-color: #1B5E20;
+    background-color: #9698ff;
     color: #FFF;
 }
 
