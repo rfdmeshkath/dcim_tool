@@ -6,6 +6,7 @@ login_info = {
   'username': 'fyp',
   'password': 'cisco',
 }
+
 device = ConnectHandler(**login_info)
 device.find_prompt()
 output = device.send_command('show ip int brief')
