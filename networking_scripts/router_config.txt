@@ -1,0 +1,79 @@
+R1:
+
+enable
+configure terminal
+hostname R1
+line vty 0 4
+transport input ssh
+login local
+exit
+enable secret cisco
+int g0/0
+ip address 192.168.10.100 255.255.255.0
+no shutdown
+exit
+ip domain-name fyp.com
+username rafid password cisco
+crypto key generate rsa
+1024
+line vty 0 4
+transport input ssh
+login local
+exit
+
+
+configure terminal
+interface s0/0/0
+ip address 10.0.0.1 255.0.0.0
+no shut
+clock rate 64000
+exit
+router ospf 1
+network 192.168.10.0 0.0.0.255 area 0
+network 10.0.0.0 0.255.255.255 area 0
+
+
+snmp-server community fypreadsnmp ro
+
+
+R2:
+
+enable
+configure terminal
+hostname R2
+line vty 0 4
+transport input ssh
+login local
+exit
+enable secret cisco
+int g0/0
+ip address 192.168.20.100 255.255.255.0
+no shutdown
+exit
+ip domain-name fyp.com
+username rafid password cisco
+crypto key generate rsa
+1024
+line vty 0 4
+transport input ssh
+login local
+exit
+
+
+configure terminal
+interface s0/0/0
+ip address 10.0.0.2 255.0.0.0
+no shut
+clock rate 64000
+exit
+router ospf 1
+network 192.168.20.0 0.0.0.255 area 0
+network 10.0.0.0 0.255.255.255 area 0
+
+
+snmp-server community fypreadsnmp ro
+
+
+
+
+

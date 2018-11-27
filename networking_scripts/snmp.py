@@ -2,10 +2,13 @@ from __future__ import print_function
 from pysnmp.entity.rfc3413.oneliner import cmdgen
 
 COMMUNITY_STRING = 'fypreadsnmp'
-SNMP_PORT = 161
-SNMP_HOST = '192.168.11.2'
-sysUpTime_OID = '.1.3.6.1.2.1.1.3.0'
+SNMP_PORT = 161 # default snmp port
+SNMP_HOST = '192.168.10.100'
+
 sysDescr_OID = '.1.3.6.1.2.1.1.1.0'
+sysUpTime_OID = '.1.3.6.1.2.1.1.3.0'
+sysName = '.1.3.6.1.2.1.1.5.0'
+cpu_util = '.1.3.6.1.4.1.14179.1.1.5.1' ##
 display_errors = True
 
 cmdGen = cmdgen.CommandGenerator()

@@ -1,14 +1,18 @@
 from netmiko import ConnectHandler
 
-login_info = {
-  'device_type': 'cisco_ios',
-  'ip': '192.168.11.2',
-  'username': 'fyp',
-  'password': 'cisco',
-}
+from config import CISCO_LOGIN_INFO
 
-device = ConnectHandler(**login_info)
-device.find_prompt()
-output = device.send_command('show ip int brief')
+device_address = '192.168.10.100'
 
-print(output)
+
+def retrieve_cisco_data(device_address):
+    CISCO_LOGIN_INFO['ip'] = device_address
+
+    # int_stat = 'show ip interface brief'
+    device = ConnectHandler(**CISCO_LOGIN_INFO)
+    device.find_prompt()
+    lldp_connections = device.send_command('show cdp neighbors')
+    ram_usage = device.send_command('show processes memory | i Processor')
+    cpu_usage = device.send_command('show processes cpu sorted | i CPU')
+
+    return lldp_connections, ram_usage, cpu_usage

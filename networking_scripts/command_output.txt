@@ -1,0 +1,25 @@
+lldp_output ='''Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
+                  S - Switch, H - Host, I - IGMP, r - Repeater, P - Phone,
+                  D - Remote, C - CVTA, M - Two-port Mac Relay
+
+Device ID        Local Intrfce     Holdtme    Capability  Platform  Port ID
+R1.fyp.com       Ser 0/0/0         132            R B S I CISCO2901 Ser 0/0/0
+R1.fyp.com       Ser 0/0/0         132            R B S I CISCO2901 Ser 0/0/0
+
+Total cdp entries displayed : 1'''
+
+
+ram_output = '''Processor Pool Total:  289967796 Used:   36315344 Free:  253652452'''
+
+cpu_output = '''CPU utilization for five seconds: 1%/0%; one minute: 0%; five minutes: 0%'''
+
+int_stat_output = '''Interface                  IP-Address      OK? Method Status                Protocol
+Embedded-Service-Engine0/0 unassigned      YES unset  administratively down down
+GigabitEthernet0/0         192.168.10.100  YES manual up                    up
+GigabitEthernet0/1         unassigned      YES unset  administratively down down
+Serial0/0/0                10.0.0.1        YES manual up                    up
+Serial0/0/1                unassigned      YES unset  administratively down down'''
+
+
+
+
