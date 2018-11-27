@@ -4,6 +4,16 @@
 
 {% block head %}
   {{ super() }}
+<script type="text/javascript">
+		$(".table-togglable").DataTable({
+            bLengthChange: true,
+            "lengthMenu": [ [10, 15, 25, 50, 100, -1], [10, 15, 25, 50, 100, "All"] ],
+            "iDisplayLength": 50,
+            bInfo: false,
+            responsive: true,
+            "bAutoWidth": false
+        });
+</script>
 {% endblock %}
 
 {% block content %}
@@ -20,8 +30,17 @@
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </form>
+            <br><br>
+            {{ data_table | safe }}
+
+            <br><br><br>
+
+            {{ status_table | safe }}
         </div>
+
     </center>
+    <br><br>
+
 </main>
 
 {% endblock %}
