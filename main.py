@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request
 import pandas as pd
 
+from db_reader import get_lldp_connections
+
 app = Flask(__name__)
 
 
@@ -17,13 +19,12 @@ def search_connections():
     if request.method == 'GET':
         return render_template('connections.html', user_name=sesssion_username)
 
-
     elif request.method == 'POST':
         searched_item = request.form.get('searched_item')
-        print(searched_item), type(searched_item)
-        data = pd.read_excel('test.xlsx', index=False)
-        data = data.to_html(classes=['table table-striped'], header=True, index=False, table_id='DataTable_0')
-        return render_template('tables.html', user_name=sesssion_username, data_table=data, escape=False)
+        conns, status = get_lldp_connections(searched_item)
+
+        return render_template('connections.html', user_name=sesssion_username, data_table=conns, status_table=status,
+                               escape=False)
 
 
 
