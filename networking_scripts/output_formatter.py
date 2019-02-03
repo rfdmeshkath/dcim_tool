@@ -17,7 +17,7 @@ def lldp_neighbour(device_name, output_str):
     time = str(t.hour) + ':' + str(t.minute)
 
     connections = []
-    top = 289
+    top = 287
     bottom = -33
     trimmed_str = output_str[top:bottom]
     for line in trimmed_str.split('\n'):
@@ -75,3 +75,4 @@ def cpu_usage(device_name, output_str):
 
     cpu_df = pd.DataFrame([[device_name, cpu_used, date, time]], columns=['device_name', 'cpu_used', 'date', 'time'])
     return cpu_df
+
