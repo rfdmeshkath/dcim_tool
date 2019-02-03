@@ -1,60 +1,118 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
     {% block head %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-    <link href='http://fonts.googleapis.com/css?family=Roboto:400,600,700' rel='stylesheet' type='text/css'>
-    <link href="{{ url_for('static',filename='css/base.css') }}" rel="stylesheet"/>
-    <link href="{{ url_for('static',filename='css/ForceDirected.css') }}" rel="stylesheet"/>
-    <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet"/>
-    <link href="{{ url_for('static',filename='css/bootstrap.css') }}" rel="stylesheet"/>
+    <title>{% block title %}{% endblock %} - NCMT</title>
 
-    <link href="{{ url_for('static',filename='css/reset.css') }}" rel="stylesheet"/><!-- Custom CSS -->
-    <link href="{{ url_for('static',filename='css/style.css') }}" rel="stylesheet"/><!-- Custom CSS -->
+    <!-- Custom fonts for this template-->
+    <link href="{{ url_for('static',filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet"/>
+    <!-- Page level plugin CSS-->
+    <link href="{{ url_for('static',filename='vendor/datatables/dataTables.bootstrap4.css') }}" rel="stylesheet"/>
 
-    <script
-		src="https://code.jquery.com/jquery-3.3.1.js"
-		integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
-		crossorigin="anonymous"></script>
+    <!-- Custom styles for this template-->
+    <link href="{{ url_for('static',filename='css/sb-admin.css') }}" rel="stylesheet"/>
 
-    <script type="text/javascript" src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.18/css/dataTables.jqueryui.min.css">
-
-    <script type="text/javascript" src="{{ url_for('static', filename='js/modernizr.js') }}"></script>
-    <link rel="stylesheet" href="http://cdn.pydata.org/bokeh/release/bokeh-0.12.2.min.css" type="text/css"/>
-    <script type="text/javascript" src="http://cdn.pydata.org/bokeh/release/bokeh-0.12.2.min.js"></script>
-    <title>{% block title %}{% endblock %} - DCIM</title>
     {% endblock %}
 </head>
-<body>
-<header>
-    <div id="cd">NIMT > {% block current_page %}{% endblock %}</div>
-    <nav id="cd-top-nav">
-        <nav class="session_name">Hi &nbsp;&nbsp; {{ user_name }}</nav>
+
+<body id="page-top">
+
+    <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
+
+        <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <a class="navbar-brand mr-1" href="/">Network Connection Management Tool > {% block current_page %}{% endblock %}</a>
+
+        <!-- Navbar -->
+        <ul class="navbar-nav ml-auto mr-0 mr-md-3 my-2 my-md-0">
+          <li class="nav-item dropdown no-arrow">
+            <a class="nav-link dropdown-toggle" href="#">
+              <i class="fas fa-user-circle fa-fw"></i>
+            </a>
+          </li>
+          <li class="nav-item dropdown no-arrow">
+            <a class="navbar-brand mr-1" href="#">Hi {{ user_name }}</a>
+          </li>
+        </ul>
+
     </nav>
-    <a id="cd-menu-trigger" href="#0"><span class="cd-menu-text">Menu</span><span class="cd-menu-icon"></span></a>
-</header>
-{% block content %}{% endblock %}
 
-<nav id="cd-lateral-nav">
-    <ul class="cd-navigation cd-single-item-wrapper">
-        <li><a class="current" href="/">Home</a></li>
-        <li><a href="/connections">Connections</a></li>
-    </ul>
-</nav>
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="sidebar navbar-nav">
+            <li class= {% block glowing_home_in_side_bar %} "nav-item" {% endblock %}>
+                <a class="nav-link" href="/">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Home</span>
+                </a>
+            </li>
+
+            <li class={% block glowing_deviceDetails_in_side_bar %}"nav-item"{% endblock %}>
+                <a class="nav-link" href="/deviceDetails">
+                    <i class="fas fa-fw fa-chart-area"></i>
+                    <span>Device Details</span></a>
+            </li>
+
+            <li class={% block glowing_connections_in_side_bar %}"nav-item"{% endblock %}>
+                <a class="nav-link" href="/connections">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Connections</span></a>
+            </li>
+
+        </ul>
+
+        <div id="content-wrapper">
+
+            {% block content %}{% endblock %}
+
+            <!-- Sticky Footer -->
+            <footer class="sticky-footer">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright © Network Connection Management Tool 2019</span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <!-- /.content-wrapper -->
+    </div>
 
 
-<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
 
-<script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/excanvas.js') }}"></script>
-<!-- JIT Library File -->
-<script type="text/javascript" src="{{ url_for('static', filename='js/filesaver.js') }}"></script>
+    <!-- Bootstrap core JavaScript-->
+    <script type="text/javascript" src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
-<script type="text/javascript" src="{{ url_for('static', filename='js/jit.js') }}"></script>
+    <!-- Core plugin JavaScript-->
+    <script type="text/javascript" src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+
+    <!-- Page level plugin JavaScript-->
+    <script type="text/javascript" src="{{ url_for('static', filename='vendor/chart.js/Chart.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='vendor/datatables/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.js') }}"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/sb-admin.min.js') }}"></script>
+
+    <!-- Demo scripts for this page-->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/demo/datatables-demo.js') }}"></script>
+    <!--<script type="text/javascript" src="{{ url_for('static', filename='js/demo/chart-area-demo.js') }}"></script>-->
+
+{% block javaScript_file %}{% endblock %}
 </body>
 
 </html>

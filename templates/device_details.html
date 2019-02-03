@@ -1,0 +1,208 @@
+{% extends "base_template.html" %}
+
+{% block title %} Device Details {% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block current_page %} Device Details {% endblock %}
+
+{% block glowing_deviceDetails_in_side_bar %}"nav-item active"{% endblock %}
+
+
+<!----------body starts---------->
+{% block content %}
+  <center>
+    <form action="/deviceDetails"  method="POST" class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
+      <div class="input-group">
+        <input type="text" name="device_name" class="form-control" placeholder="Device Name" aria-label="Search" aria-describedby="basic-addon2">
+        <div class="input-group-append">
+          <button class="btn btn-primary" type="submit">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
+    </form>
+  </center>
+
+  <br><br>
+
+  <!-- Searched device display bar -->
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="#">Showing result for </a>
+    </li>
+    <li class="breadcrumb-item active">{{ device_name }}</li>
+  </ol>
+
+
+  <!-- CPU Usage Chart -->
+  <div class="card mb-3">
+    <div class="card-header">
+      <i class="fas fa-chart-area"></i>
+      CPU Usage Over Time</div>
+    <div class="card-body">
+      <canvas id="cpuUsageChart" width="100%" height="30"></canvas>
+    </div>
+    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+  </div>
+
+
+  <!-- RAM Usage Chart -->
+  <div class="card mb-3">
+    <div class="card-header">
+      <i class="fas fa-chart-area"></i>
+      Ram Usage Over Time</div>
+    <div class="card-body">
+      <canvas id="ramUsageChart" width="100%" height="30"></canvas>
+    </div>
+    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+  </div>
+
+<!-- DataTables for showing connections -->
+<div class="card mb-3">
+  <div class="card-header">
+    <i class="fas fa-table"></i>
+     LLDP Connections</div>
+  <div class="card-body">
+    <div class="table-responsive">
+
+      {{ data_table | safe }}
+
+    </div>
+  </div>
+  <div class="card-footer small text-muted">Updated: {{ time }}</div>
+</div>
+
+
+
+{% endblock %}
+
+
+{% block javaScript_file %}
+
+  {% if cpu_x_axis is defined and  cpu_x_axis|length > 0
+      and cpu_y_axis is defined and  cpu_y_axis|length > 0 %}
+    <script type="text/javascript">
+
+        // Set new default font family and font color to mimic Bootstrap's default styling
+      Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+      Chart.defaults.global.defaultFontColor = '#292b2c';
+
+      //CPU Usage Chart
+      var cpuChartTemplate = document.getElementById("cpuUsageChart");
+      var cpuUsageLineChart = new Chart(cpuChartTemplate, {
+        type: 'line',
+        data: {
+          labels: {{ cpu_x_axis | safe }},
+          datasets: [{
+            label: "Usage (%)",
+            lineTension: 0.3,
+            backgroundColor: "rgba(2,117,216,0.2)",
+            borderColor: "rgba(2,117,216,1)",
+            pointRadius: 5,
+            pointBackgroundColor: "rgba(2,117,216,1)",
+            pointBorderColor: "rgba(255,255,255,0.8)",
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(2,117,216,1)",
+            pointHitRadius: 50,
+            pointBorderWidth: 2,
+            data: {{ cpu_y_axis | safe }},
+          }],
+        },
+        options: {
+          scales: {
+            xAxes: [{
+              time: {
+                unit: 'date'
+              },
+              gridLines: {
+                display: false
+              },
+              ticks: {
+                maxTicksLimit: 7
+              }
+            }],
+            yAxes: [{
+              ticks: {
+                min: 0,
+                max: 100,
+                maxTicksLimit: 5
+              },
+              gridLines: {
+                color: "rgba(0, 0, 0, .125)",
+              }
+            }],
+          },
+          legend: {
+            display: false
+          }
+        }
+      });
+    </script>
+  {% endif %}
+
+
+    {% if ram_x_axis is defined and  ram_x_axis|length > 0
+      and ram_y_axis is defined and  ram_y_axis|length > 0 %}
+    <script type="text/javascript">
+
+        // Set new default font family and font color to mimic Bootstrap's default styling
+      Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+      Chart.defaults.global.defaultFontColor = '#292b2c';
+
+      //CPU Usage Chart
+      var ramChartTemplate = document.getElementById("ramUsageChart");
+      var ramUsageLineChart = new Chart(ramChartTemplate, {
+        type: 'line',
+        data: {
+          labels: {{ ram_x_axis | safe }},
+          datasets: [{
+            label: "Usage (MB)",
+            lineTension: 0.3,
+            backgroundColor: "rgba(2,117,216,0.2)",
+            borderColor: "rgba(2,117,216,1)",
+            pointRadius: 5,
+            pointBackgroundColor: "rgba(2,117,216,1)",
+            pointBorderColor: "rgba(255,255,255,0.8)",
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(2,117,216,1)",
+            pointHitRadius: 50,
+            pointBorderWidth: 2,
+            data: {{ ram_y_axis | safe }},
+          }],
+        },
+        options: {
+          scales: {
+            xAxes: [{
+              time: {
+                unit: 'date'
+              },
+              gridLines: {
+                display: false
+              },
+              ticks: {
+                maxTicksLimit: 7
+              }
+            }],
+            yAxes: [{
+              ticks: {
+                min: 0,
+                max: 256,
+                maxTicksLimit: 5
+              },
+              gridLines: {
+                color: "rgba(0, 0, 0, .125)",
+              }
+            }],
+          },
+          legend: {
+            display: false
+          }
+        }
+      });
+    </script>
+  {% endif %}
+{% endblock %}
+

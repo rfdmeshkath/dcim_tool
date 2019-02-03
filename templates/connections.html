@@ -1,47 +1,46 @@
 {% extends "base_template.html" %}
 
-{% block title %} Home {% endblock %}
+{% block title %} Connections {% endblock %}
 
 {% block head %}
-  {{ super() }}
-<script type="text/javascript">
-		$(".table-togglable").DataTable({
-            bLengthChange: true,
-            "lengthMenu": [ [10, 15, 25, 50, 100, -1], [10, 15, 25, 50, 100, "All"] ],
-            "iDisplayLength": 50,
-            bInfo: false,
-            responsive: true,
-            "bAutoWidth": false
-        });
-</script>
+{{ super() }}
 {% endblock %}
 
-{% block content %}
 
 {% block current_page %} Connections {% endblock %}
 
-<main class="cd-main-content">
-    <center>
-        <div class="container">
-            <br><br><br><br>
-            <form action='/connections' class="form" method="POST">
-                <div class="form-group">
-                    <input type="text" class="form-control" name="searched_item" placeholder="Device Name">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-            </form>
-            <br><br>
-            {{ data_table | safe }}
+{% block glowing_connections_in_side_bar %}"nav-item active"{% endblock %}
 
-            <br><br><br>
+<!----------body starts---------->
+{% block content %}
 
-            {{ status_table | safe }}
+<!--<form action='/connections' class="form" method="POST">-->
+<!--<div class="form-group">-->
+<!--<input type="text" class="form-control" name="searched_item" placeholder="Device Name">-->
+<!--<button type="submit" class="btn btn-primary">Submit</button>-->
+<!--</div>-->
+<!--</form>-->
+
+
+<form action="/connections"  method="POST">
+    <div class="form-row align-items-center">
+        <div class="col-auto">
+            <input type="text" name="searched_item" class="form-control mb-2" id="inlineFormInput" placeholder="">
         </div>
+        <div class="col-auto">
+            <!--<button type="submit" class="btn btn-primary mb-2" id="myButton1" onclick="change()">Search</button>-->
+            <input onclick="change_button_text()" type="submit" class="btn btn-primary mb-2" value="Search" id="search_connection_btn" />
+        </div>
+    </div>
+</form>
 
-    </center>
-    <br><br>
+<script>
+    function change_button_text()
+    {
+        document.getElementById("search_connection_btn").value="Processing....";
+    }
+</script>
 
-</main>
+
 
 {% endblock %}
-
