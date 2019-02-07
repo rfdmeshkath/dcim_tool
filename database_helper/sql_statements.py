@@ -8,7 +8,7 @@ SELECT
 FROM 
     device x, 
     device y, 
-    lldp_connection.sql a 
+    lldp_connection a
 WHERE 
     a.local_device_id = x.device_id 
     and  
@@ -16,24 +16,17 @@ WHERE
 """
 
 
-insert_device = """insert into device (device_name) values ('remote-device-2');"""
+a ='''SELECT 
+    x.device_name, 
+    a.local_port
+FROM 
+    device x, 
+    lldp_connection a
+WHERE 
+    a.local_device_id = x.device_id
+    AND
+    device_name='local-device-1'
+    AND
+    local_port='eth1';
+    '''
 
-insert_lldp = \
-"""
-insert into lldp_connection.sql
-(
-    local_device_id,
-    local_port,
-    remote_device_id,
-    remote_port,
-    updated_datetime
-)
-values
-(
-    2,
-    'eth3',
-    3,
-    'eth4',
-    '24-09-2018 12:23:45'
-);
-"""
