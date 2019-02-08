@@ -13881,7 +13881,7 @@
 	
 	
 		/**
-		 * DataTables build type (expanded by the download builder)
+		 * DataTables build type (expanded by the required_files builder)
 		 *
 		 *  @type string
 		 */
