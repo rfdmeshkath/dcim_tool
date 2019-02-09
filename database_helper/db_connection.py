@@ -1,6 +1,6 @@
 import cx_Oracle
 
-from config import DATABASE_CREDENTIAL, DATABASE_DSN
+from config import DATABASE_CREDENTIAL, DATABASE_DSN, ERROR_MESSAGES
 
 
 def db_connect():
@@ -10,17 +10,6 @@ def db_connect():
         connection = cx_Oracle.connect(**DATABASE_CREDENTIAL)
         cursor = connection.cursor()
     except Exception as e:
-        connection = 'Error-501: Database connection error'
+        connection = ERROR_MESSAGES['database_connection_error']
         cursor = str(e)
-        print(str(e))
     return connection, cursor
-
-
-# connection,cursor = db_connect()
-# temp_var = cursor.execute('select * from connections')
-#
-# result = temp_var.fetchall()
-#
-# print(result, type(result))
-# cursor.close()
-# connection.close()
