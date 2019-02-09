@@ -22,6 +22,7 @@ class Cisco_3700:
     def retrieve_data(self, device):
         CISCO_LOGIN_INFO['device_type'] = 'cisco_ios'
         CISCO_LOGIN_INFO['ip'] = device
+        # add try catch
         device = ConnectHandler(**CISCO_LOGIN_INFO)
         device.find_prompt()
         lldp_connections = device.send_command('show cdp neighbors')
@@ -90,10 +91,19 @@ class Cisco_3700:
         cpu_df = pd.DataFrame([[self.device, cpu_used, date_time]], columns=['device_name', 'cpu_used', 'date_time'])
         return cpu_df
 
+    def get_total_ram(self):
+        connections_str, ram_str, cpu_str = self.retrieve_data(self.device)
+        ram_df = self.ram_usage(ram_str)
+        return round(ram_df['total_ram'].to_list()[0])
+
     def formatted_output(self):
         connections_str, ram_str, cpu_str = self.retrieve_data(self.device)
         connection_df = self.lldp_neighbour(connections_str)
         ram_df = self.ram_usage(ram_str)
         cpu_df = self.cpu_usage(cpu_str)
         return connection_df, ram_df, cpu_df
+
+
+
+
 
