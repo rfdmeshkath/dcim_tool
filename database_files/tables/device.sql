@@ -25,3 +25,12 @@ BEGIN
   FROM   dual;
 END;
 /
+
+
+ALTER TABLE device ADD
+(
+    system_name       VARCHAR2(50),
+    os_sescription    VARCHAR2(200),
+    uptime            NUMBER,
+    total_ram         NUMBER
+);
