@@ -1,91 +1,99 @@
-from database_helper.db_connection import db_connect
-from networking_scripts.output_formatter import lldp_neighbour, ram_usage, cpu_usage
-from networking_scripts.ssh import retrieve_cisco_data
+import pandas as pd
+import datetime
+
+from netmiko import ConnectHandler
+
+from config import CISCO_LOGIN_INFO
 
 
-
-# hostname = '192.168.10.100'
-# lldp_output, ram_output, cpu_output = retrieve_cisco_data(hostname)
-
-lldp_output ='''Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
-                  S - Switch, H - Host, I - IGMP, r - Repeater, P - Phone,
-                  D - Remote, C - CVTA, M - Two-port Mac Relay
-
-Device ID        Local Intrfce     Holdtme    Capability  Platform  Port ID
-R1.fyp.com       Ser 0/0/0         132            R B S I CISCO2901 Ser 0/0/0
-R1.fyp.com       Ser 0/0/1         132            R B S I CISCO2901 Ser 0/0/2
-
-Total cdp entries displayed : 1'''
+def get_date_time():
+    d = datetime.datetime.now().date()
+    t = datetime.datetime.now().time()
+    date = str(d.day) + '-' + str(d.month) + '-' + str(d.year)
+    time = str(t.hour) + ':' + str(t.minute)
+    date_time = date + ' ' + time
+    return date_time
 
 
-ram_output = '''Processor Pool Total:  289967796 Used:   36315344 Free:  253652452'''
+class Cisco_3700:
+    def __init__(self, device):
+        self.device = device
 
-cpu_output = '''CPU utilization for five seconds: 1%/0%; one minute: 0%; five minutes: 0%'''
+    def retrieve_data(self, device):
+        CISCO_LOGIN_INFO['device_type'] = 'cisco_ios'
+        CISCO_LOGIN_INFO['ip'] = device
+        device = ConnectHandler(**CISCO_LOGIN_INFO)
+        device.find_prompt()
+        lldp_connections = device.send_command('show cdp neighbors')
+        ram_usage = device.send_command('show processes memory | i Processor')
+        cpu_usage = device.send_command('show processes cpu sorted | i CPU')
 
-int_stat_output = '''Interface                  IP-Address      OK? Method Status                Protocol
-Embedded-Service-Engine0/0 unassigned      YES unset  administratively down down
-GigabitEthernet0/0         192.168.10.100  YES manual up                    up
-GigabitEthernet0/1         unassigned      YES unset  administratively down down
-Serial0/0/0                10.0.0.1        YES manual up                    up
-Serial0/0/1                unassigned      YES unset  administratively down down'''
+        return lldp_connections, ram_usage, cpu_usage
 
+    def lldp_neighbour(self, output_str):
+        """
+        This function takes the raw output of 'show cdp neighbour' in cisco routers
+        and returns a pandas DataFrame of column 'local_device', 'local_port', 'remote_device', 'remote_port',
+        'date', 'time'
+        :param output_str: (type: str) raw output generated from the command 'show cdp neighbour'
+        :return: pandas DataFrame
+        """
 
+        date_time = get_date_time()
+        connections = []
+        top = 212
+        # bottom = -33
+        trimmed_str = output_str[top:]
+        for line in trimmed_str.split('\n'):
+            line_content = line.split()
+            local_port = line_content[1] + line_content[2]
+            remote_device = line_content[0].split('.')[0]
+            remote_port = line_content[8] + line_content[9]
+            connections.append([self.device, local_port.strip(), remote_device.strip(), remote_port.strip(),
+                                date_time])
 
-hostname = 'R2'
-connections_df = lldp_neighbour(hostname, lldp_output)
-ram_df = ram_usage(hostname, ram_output)
-cpu_df = cpu_usage(hostname, cpu_output)
+        connections_df = pd.DataFrame(connections,
+                                      columns=['local_device', 'local_port', 'remote_device', 'remote_port',
+                                               'date_time'])
+        return connections_df
 
-connection, cursor = db_connect()
+    def ram_usage(self, output_str):
+        """
+        This function takes the raw output of 'show processes memory | i Processor' in cisco routers
+        and returns a pandas DataFrame of column 'device_name', 'total_ram', 'currently_used', 'currently_free',
+        'date', 'time'
+        :param output_str: (type: str) raw output generated from the command 'show processes memory | i Processor'
+        :return: pandas DataFrame
+        """
 
-cursor.execute('''
-insert into device_status
-(
-    device_name,
-    total_ram,
-    currently_used,
-    currently_free,
-    cpu_usage,
-    collection_date,
-    collection_time
-)
-values
-(
-    '{}',
-    '{}',
-    '{}',
-    '{}',
-    '{}',
-    '{}',
-    '{}'
-)'''.format(ram_df['device_name'][0], ram_df['total_ram'][0], ram_df['currently_used'][0],
-             ram_df['currently_free'][0], cpu_df['cpu_used'][0], cpu_df['date'][0], cpu_df['time'][0]))
+        date_time = get_date_time()
+        output_contents = output_str.split(' ')
+        total_ram = float(output_contents[4]) / 1000000  # converting Bytes to MegaBytes
+        currently_used = float(output_contents[8]) / 1000000  # converting Bytes to MegaBytes
+        currently_free = float(output_contents[11]) / 1000000  # converting Bytes to MegaBytes
 
+        ram_df = pd.DataFrame([[self.device, total_ram, currently_used, currently_free, date_time]],
+                              columns=['device_name', 'total_ram', 'currently_used', 'currently_free', 'date_time'])
+        return ram_df
 
+    def cpu_usage(self, output_str):
+        """
+        This function takes the raw output of 'show processes cpu sorted | i CPU' in cisco routers
+        and returns a pandas DataFrame of column 'device_name', 'cpu_used', 'date', 'time'
+        :param output_str: (type: str) raw output generated from the command 'show processes cpu sorted | i CPU'
+        :return: pandas DataFrame
+        """
 
-for index, row in connections_df.iterrows():
-    cursor.execute('''
-    insert into connections
-    (
-        local_device,
-        local_port,
-        remote_device,
-        remote_port,
-        collection_date,
-        collection_time
-    )
-    values
-    (
-        '{}',
-        '{}',
-        '{}',
-        '{}',
-        '{}',
-        '{}'
-    )'''.format(row['local_device'], row['local_port'], row['remote_device'], row['remote_port'],
-                                                        row['date'], row['time']))
+        date_time = get_date_time()
+        output_contents = output_str.split(' ')
+        cpu_used = output_contents[5].split('/')[0].strip('%')
+        cpu_df = pd.DataFrame([[self.device, cpu_used, date_time]], columns=['device_name', 'cpu_used', 'date_time'])
+        return cpu_df
 
-
-connection.commit()
-connection.close()
+    def formatted_output(self):
+        connections_str, ram_str, cpu_str = self.retrieve_data(self.device)
+        connection_df = self.lldp_neighbour(connections_str)
+        ram_df = self.ram_usage(ram_str)
+        cpu_df = self.cpu_usage(cpu_str)
+        return connection_df, ram_df, cpu_df
 

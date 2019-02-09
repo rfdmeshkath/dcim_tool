@@ -20,4 +20,16 @@ def collect_snmp_data(hostname, oid):
         print('    %-16s %-60s' % ('error_index', error_index))
 
 
-collect_snmp_data('192.168.10.100', SNMP_OID['sysUpTime'])
+collect_snmp_data('192.168.10.1', SNMP_OID['sysUpTime'])
+
+
+a = '''Pv2-MIB::sysDescr.0 = Cisco IOS Software, 3700 Software (C3725-ADVENTERPRISEK9-M), Version 12.4(15)T7, RELEASE SOFTWARE (fc3)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2008 by Cisco Systems, Inc.
+Compiled Wed 13-Aug-08 21:36 by prod_rel_team
+'''
+
+# description = a.split('\n')[0].split('=')[1].strip()
+# print(description)
+
+
