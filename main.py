@@ -1,9 +1,7 @@
-import os
-
-from flask import Flask, render_template, request, send_file, send_from_directory
 import pandas as pd
+from flask import Flask, render_template, request, send_from_directory
 
-from db_reader import get_lldp_connections
+from device_details import collect_data_for_device
 
 app = Flask(__name__)
 
@@ -23,26 +21,17 @@ def device_details():
 
     elif request.method == 'POST':
         device_name = request.form.get('device_name')
-        print(device_name)
-        # conns, status = get_lldp_connections(searched_item)
-        updated_time = '12 Jan 2019 12:50 am'
-        connections_df = pd.read_excel('conn_test.xlsx')
-        connections = connections_df.to_html(classes=['table table-bordered'], table_id='dataTable', header=True,
-                                             index=False)
 
-        cpu_x_axis = ["11:10pm", "11:15pm", "11:20pm", "11:25pm", "11:30pm", "11:35pm", "11:40pm", "11:45pm", "11:50pm",
-                      "11:55pm", "12:00pm", "12:05pm"]
-        cpu_y_axis = [50, 20, 35, 90, 45, 56, 84, 33, 49, 24, 32, 98]
+        device_data = collect_data_for_device(device_name)
 
-        ram_x_axis = ["11:10pm", "11:15pm", "11:20pm", "11:25pm", "11:30pm", "11:35pm", "11:40pm", "11:45pm", "11:50pm",
-                      "11:55pm", "12:00pm", "12:05pm"]
-        ram_y_axis = [110, 120, 135, 90, 145, 56, 84, 133, 49, 124, 132, 98]
-
-        return render_template('device_details.html', user_name=session_username,
-                               device_name=device_name,
-                               cpu_x_axis=cpu_x_axis, cpu_y_axis=cpu_y_axis,
-                               ram_x_axis=ram_x_axis, ram_y_axis=ram_y_axis,
-                               time=updated_time, data_table=connections)
+        return render_template('device_details.html', user_name=session_username, device_name=device_name,
+                               system_namr=device_data['system_name'], os_details=device_data['os_details'],
+                               up_time=device_data['up_time'], total_ram=device_data['total_ram'],
+                               cpu_x_axis=device_data['memory_timeline'], cpu_y_axis=device_data['cpu_usages'],
+                               cpu_last_updated=device_data['memory_last_updated'],
+                               ram_x_axis=device_data['memory_timeline'], ram_y_axis=device_data['ram_usages'],
+                               ram_last_updated=device_data['memory_last_updated'],
+                               data_table=device_data['lldp_connections_table'], lldp_last_updated=device_data['lldp_last_updated'])
 
 
 @app.route('/connections', methods=['GET', 'POST'])
