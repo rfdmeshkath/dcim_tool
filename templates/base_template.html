@@ -13,11 +13,12 @@
 
     <!-- Custom fonts for this template-->
     <link href="{{ url_for('static',filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet"/>
+
     <!-- Page level plugin CSS-->
     <link href="{{ url_for('static',filename='vendor/datatables/dataTables.bootstrap4.css') }}" rel="stylesheet"/>
 
     <!-- Custom styles for this template-->
-    <link href="{{ url_for('static',filename='css/sb-admin.css') }}" rel="stylesheet"/>
+    <link href="{{ url_for('static',filename='css/project.css') }}" rel="stylesheet"/>
 
     {% endblock %}
 </head>
@@ -58,7 +59,7 @@
             </li>
 
             <li class={% block glowing_deviceDetails_in_side_bar %}"nav-item"{% endblock %}>
-                <a class="nav-link" href="/deviceDetails">
+                <a class="nav-link" href="/device-details">
                     <i class="fas fa-fw fa-chart-area"></i>
                     <span>Device Details</span></a>
             </li>
@@ -88,31 +89,30 @@
     </div>
 
 
-    <!-- Scroll to Top Button-->
+    <!-- Scroll to Top Button -->
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
 
-    <!-- Bootstrap core JavaScript-->
+    <!-- Bootstrap core JavaScript -->
     <script type="text/javascript" src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
-    <!-- Core plugin JavaScript-->
+    <!-- Core plugin JavaScript -->
     <script type="text/javascript" src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
 
-    <!-- Page level plugin JavaScript-->
+    <!-- Page level plugin JavaScript -->
     <script type="text/javascript" src="{{ url_for('static', filename='vendor/chart.js/Chart.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='vendor/datatables/jquery.dataTables.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.js') }}"></script>
 
-    <!-- Custom scripts for all pages-->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/sb-admin.min.js') }}"></script>
+    <!-- Custom scripts for all pages -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/project.min.js') }}"></script>
 
-    <!-- Demo scripts for this page-->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/demo/datatables-demo.js') }}"></script>
-    <!--<script type="text/javascript" src="{{ url_for('static', filename='js/demo/chart-area-demo.js') }}"></script>-->
+    <!-- DataTable scripts for all pages -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/project-pages/datatables.js') }}"></script>
 
 {% block javaScript_file %}{% endblock %}
-</body>
 
+</body>
 </html>

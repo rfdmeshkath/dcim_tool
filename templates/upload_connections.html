@@ -1,0 +1,44 @@
+{% extends "base_template.html" %}
+
+{% block title %} Upload Connections {% endblock %}
+
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block current_page %} Upload Connections {% endblock %}
+
+
+<!----------body starts---------->
+{% block content %}
+
+<div class="form-inline justify-content-center">
+    <form action="/upload-connections" method="POST">
+        <input type="submit" class="btn btn-primary mb-2" value="Download Template" name="btn_identifier"/>
+    </form>
+    &nbsp;&nbsp;
+    <div class="input-group">
+        <form action="/upload-connections" method="POST" enctype = "multipart/form-data">
+            <span class="btn btn-secondary mb-2 btn-file">
+             <input type="file" name="file"/>
+            </span>
+             <input type="submit" class="btn btn-primary mb-2" value="Upload Excel File" name="btn_identifier"/>
+        </form>
+    </div>
+</div>
+    <br><br>
+
+    <div class="card-body">
+        {{ connections_table | safe }}
+    </div>
+
+    {% if connections_table is defined %}
+        <br>
+        <div class="form-inline justify-content-center">
+            <input type="submit" class="btn btn-primary mb-2" value="Insert" name="btn_identifier"/>
+        </div>
+        <br><br>
+    {% endif %}
+
+
+{% endblock %}

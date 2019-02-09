@@ -14,26 +14,100 @@
 <!----------body starts---------->
 {% block content %}
 
-<!--<form action='/connections' class="form" method="POST">-->
-<!--<div class="form-group">-->
-<!--<input type="text" class="form-control" name="searched_item" placeholder="Device Name">-->
-<!--<button type="submit" class="btn btn-primary">Submit</button>-->
-<!--</div>-->
-<!--</form>-->
 
 
-<form action="/connections"  method="POST">
-    <div class="form-row align-items-center">
-        <div class="col-auto">
-            <input type="text" name="searched_item" class="form-control mb-2" id="inlineFormInput" placeholder="">
+
+<div class="form-inline justify-content-center">
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#connectionInsertModal">
+        Insert Single Connection
+    </button>
+    &nbsp;&nbsp;
+    <!-- Search box form -->
+    <form action="/connections"  method="POST">
+        <div class="form-row align-items-center">
+            <div class="col-auto">
+                <input type="text" name="searched_item" class="form-control mb-2" id="inlineFormInput" placeholder="">
+            </div>
+            <div class="col-auto">
+                <input onclick="change_button_text()" type="submit" class="btn btn-primary mb-2" value="Search" id="search_connection_btn" name="btn_identifier"/>
+            </div>
         </div>
-        <div class="col-auto">
-            <!--<button type="submit" class="btn btn-primary mb-2" id="myButton1" onclick="change()">Search</button>-->
-            <input onclick="change_button_text()" type="submit" class="btn btn-primary mb-2" value="Search" id="search_connection_btn" />
+    </form>
+    &nbsp;&nbsp;
+    <button class="btn btn-primary mb-2" onclick="window.location.href='/upload-connections';">Upload Multiple Connections</button>
+</div>
+
+
+
+    <!-- Insert Single Connection Modal -->
+<div class="modal fade" id="connectionInsertModal" tabindex="-1" role="dialog" aria-labelledby="connectionInsertModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="connectionInsertModalTitle">Connection Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <!-- form starts -->
+            <div class="modal-body">
+                <form action="/connections"  method="POST">
+                    <!-- Local Device -->
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Local Device</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="local_device" placeholder="eg: Router1" required>
+                        </div>
+                    </div>
+                    <!-- Local Port -->
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Local Port</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="local_port" placeholder="eg: eth10" required>
+                        </div>
+                    </div>
+                    <!-- Remote Device -->
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Remote Device</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="remote_device" placeholder="eg: Router2" required>
+                        </div>
+                    </div>
+                    <!-- Remote Port -->
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Remote Port</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="remote_port" placeholder="eg: eth20" required>
+                        </div>
+                    </div>
+                    <!-- Interconnect 1 -->
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Interconnect 1</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="interconnect_1" placeholder="">
+                        </div>
+                    </div>
+                    <!-- Interconnect 2 -->
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Interconnect 2</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="interconnect_2" placeholder="">
+                        </div>
+                    </div>
+                    <!-- Submit form -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <input type="submit" class="btn btn-success" value="Insert" name="btn_identifier" />
+                    </div>
+                </form>
+            </div>
+
         </div>
     </div>
-</form>
+</div>
 
+<!-- Script to show Processing animation once form submit button is pressed -->
 <script>
     function change_button_text()
     {
