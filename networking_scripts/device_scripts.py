@@ -1,6 +1,6 @@
-import pandas as pd
+import re
 import datetime
-
+import pandas as pd
 from netmiko import ConnectHandler
 
 from config import CISCO_LOGIN_INFO
@@ -19,6 +19,16 @@ class Cisco_3700:
     def __init__(self, device):
         self.device = device
 
+    def get_total_ram(self):
+        CISCO_LOGIN_INFO['device_type'] = 'cisco_ios'
+        CISCO_LOGIN_INFO['ip'] = self.device
+        # add try catch
+        device = ConnectHandler(**CISCO_LOGIN_INFO)
+        device.find_prompt()
+        ram_str = device.send_command('show processes memory | include Processor')
+        ram_df = self.ram_usage(ram_str)
+        return round(ram_df['total_ram'].to_list()[0])
+
     def retrieve_data(self, device):
         CISCO_LOGIN_INFO['device_type'] = 'cisco_ios'
         CISCO_LOGIN_INFO['ip'] = device
@@ -26,10 +36,11 @@ class Cisco_3700:
         device = ConnectHandler(**CISCO_LOGIN_INFO)
         device.find_prompt()
         lldp_connections = device.send_command('show cdp neighbors')
-        ram_usage = device.send_command('show processes memory | i Processor')
-        cpu_usage = device.send_command('show processes cpu sorted | i CPU')
-
-        return lldp_connections, ram_usage, cpu_usage
+        ram_usage = device.send_command('show processes memory | include Processor')
+        cpu_usage = device.send_command('show processes cpu sorted | include CPU')
+        errors = device.send_command('show interfaces | include CRC|Fast|Serial|Gig')
+        unsed_port = device.send_command('show interfaces  | include line protocol is down')
+        return lldp_connections, ram_usage, cpu_usage, errors, unsed_port
 
     def lldp_neighbour(self, output_str):
         """
@@ -91,19 +102,61 @@ class Cisco_3700:
         cpu_df = pd.DataFrame([[self.device, cpu_used, date_time]], columns=['device_name', 'cpu_used', 'date_time'])
         return cpu_df
 
-    def get_total_ram(self):
-        connections_str, ram_str, cpu_str = self.retrieve_data(self.device)
-        ram_df = self.ram_usage(ram_str)
-        return round(ram_df['total_ram'].to_list()[0])
+    def get_errors(self, output_str):
+        date_time = get_date_time()
+        error_df = pd.DataFrame(columns=['device_name', 'input', 'crc', 'frame', 'overrun', 'ignored', 'date_time'])
+        trimmed_output = []
+        line_counter = 0
+        temp_lines = ''
+        for line in output_str.split('\n'):
+            if 'protocol' in line or 'input errors' in line:
+                line_counter = line_counter + 1
+                temp_lines = temp_lines + line.strip() + ' '
+                if line_counter == 2:
+                    trimmed_output.append(temp_lines)
+                    line_counter = 0
+                    temp_lines = ''
+
+        for line in trimmed_output:
+            port = re.search('(FastEthernet|Serial)\d*\W\d*', line).group(0)
+            error_str = re.search('\d* input errors', line).group(0)
+            input_error = re.search('\d*', error_str).group(0)
+
+            error_str = re.search('\d* CRC', line).group(0)
+            crc_error = re.search('\d*', error_str).group(0)
+
+            error_str = re.search('\d* frame', line).group(0)
+            frame_error = re.search('\d*', error_str).group(0)
+
+            error_str = re.search('\d* overrun', line).group(0)
+            overrun_error = re.search('\d*', error_str).group(0)
+
+            error_str = re.search('\d* ignored', line).group(0)
+            ignored_error = re.search('\d*', error_str).group(0)
+
+            error_df = error_df.append(pd.DataFrame([[port, input_error, crc_error, frame_error, overrun_error,
+                                                      ignored_error, date_time]], columns=error_df.columns))
+        return error_df
+
+    def get_unused_ports(self, unused_port_str):
+        if unused_port_str == '':
+            return pd.DataFrame()
+
+        ports = []
+        date_time = get_date_time()
+        for line in unused_port_str.split('\n'):
+            ports.append([self.device, line.strip().split(' ')[0], date_time])
+
+        unused_port_df = pd.DataFrame(ports, columns=['device_name', 'port_name', 'date_time'])
+        return unused_port_df
 
     def formatted_output(self):
-        connections_str, ram_str, cpu_str = self.retrieve_data(self.device)
+        connections_str, ram_str, cpu_str, error_str, unused_port_str = self.retrieve_data(self.device)
         connection_df = self.lldp_neighbour(connections_str)
         ram_df = self.ram_usage(ram_str)
         cpu_df = self.cpu_usage(cpu_str)
+        error_df = self.get_errors(error_str)
+        unused_port_df = self.get_unused_ports(unused_port_str)
+        print(error_df, '\n', unused_port_df)
         return connection_df, ram_df, cpu_df
-
-
-
-
 
