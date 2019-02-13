@@ -35,6 +35,37 @@
   <li class="breadcrumb-item active">{{ device_name }}</li>
 </ol>
 
+<div class="modal-body">
+    <div class="form-group row">
+        <div class="col-sm-3 col-form-label bg-light">System Name</div>
+        {%  if  system_name is defined %}
+            <div class="col-sm-1 col-form-label">:</div>
+            <div class="col-sm-8 col-form-label bg-light">{{ system_name | safe }}</div>
+        {% endif %}
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-3 col-form-label bg-light">Operating System</div>
+        {%  if  os_details is defined %}
+            <div class="col-sm-1 col-form-label">:</div>
+            <div class="col-sm-8 col-form-label bg-light">{{ os_details | safe }}</div>
+        {% endif %}
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-3 col-form-label bg-light">Up time</div>
+        {%  if  up_time is defined %}
+            <div class="col-sm-1 col-form-label">:</div>
+            <div class="col-sm-8 col-form-label bg-light">{{ up_time | safe }} Hours</div>
+        {% endif %}
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-3 col-form-label bg-light">Available RAM</div>
+        {%  if  total_ram is defined %}
+            <div class="col-sm-1 col-form-label">:</div>
+            <div class="col-sm-8 col-form-label bg-light">{{ total_ram | safe }} MB</div>
+        {% endif %}
+    </div>
+</div>
+
 
 <!-- CPU Usage Chart -->
 <div class="card mb-3">
@@ -201,7 +232,7 @@ and ram_y_axis is defined and  ram_y_axis|length > 0 %}
         }
     }
     });
-console.log({{ cpu_x_axis | safe }})
+
 </script>
 
 <!-- Script to show Processing animation once form submit button is pressed -->
