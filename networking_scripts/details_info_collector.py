@@ -35,4 +35,4 @@ for device in all_devices:
         if mem_status != 'success':
             print('failed ' + mem_status)
         else:
-            print(con_status)
+            print(mem_status)
