@@ -3,7 +3,7 @@
 {% block title %} Device Details {% endblock %}
 
 {% block head %}
-{{ super() }}
+    {{ super() }}
 {% endblock %}
 
 {% block current_page %} Device Details {% endblock %}
@@ -14,235 +14,271 @@
 <!----------body starts---------->
 {% block content %}
 
-<form action="/device-details"  method="POST" class="form-inline justify-content-center">
-  <div class="form-row align-items-center">
-    <div class="col-auto">
-      <input type="text" name="device_name" class="form-control mb-2" id="inlineFormInput" placeholder="">
+    <form action="/device-details"  method="POST" class="form-inline justify-content-center">
+        <div class="form-row align-items-center">
+            <div class="col-auto">
+                <input type="text" name="device_name" class="form-control mb-2" id="inlineFormInput" placeholder="">
+            </div>
+            <div class="col-auto">
+                <input onclick="change_button_text()" type="submit" class="btn btn-primary mb-2" value="Search" id="search_connection_btn" />
+            </div>
+        </div>
+    </form>
+
+    <br><br>
+
+    <!-- Searched device display bar -->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="#">Showing result for </a>
+        </li>
+        <li class="breadcrumb-item active">{{ device_name }}</li>
+    </ol>
+
+    <div class="modal-body">
+        <div class="form-group row">
+            <div class="col-sm-3 col-form-label bg-light">System Name</div>
+            {%  if  system_name is defined %}
+                <div class="col-sm-1 col-form-label"><strong>:</strong></div>
+                <div class="col-sm-8 col-form-label bg-light">{{ system_name | safe }}</div>
+            {% endif %}
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-3 col-form-label bg-light">Operating System</div>
+            {%  if  os_details is defined %}
+                <div class="col-sm-1 col-form-label"><strong>:</strong></div>
+                <div class="col-sm-8 col-form-label bg-light">{{ os_details | safe }}</div>
+            {% endif %}
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-3 col-form-label bg-light">Up time</div>
+            {%  if  up_time is defined %}
+                <div class="col-sm-1 col-form-label"><strong>:</strong></div>
+                <div class="col-sm-8 col-form-label bg-light">{{ up_time | safe }} Hours</div>
+            {% endif %}
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-3 col-form-label bg-light">Available RAM</div>
+            {%  if  total_ram is defined %}
+                <div class="col-sm-1 col-form-label"><strong>:</strong></div>
+                <div class="col-sm-8 col-form-label bg-light">{{ total_ram | safe }} MB</div>
+            {% endif %}
+        </div>
     </div>
-    <div class="col-auto">
-      <input onclick="change_button_text()" type="submit" class="btn btn-primary mb-2" value="Search" id="search_connection_btn" />
+
+
+    <!-- CPU Usage Chart -->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fas fa-chart-area"></i>
+            Percentage Of CPU Usage Over Time</div>
+        <div class="card-body">
+            <canvas id="cpuUsageChart" width="100%" height="30"></canvas>
+        </div>
+        <div class="card-footer small text-muted">Last Updated - {{ cpu_last_updated | safe }}</div>
     </div>
-  </div>
-</form>
 
-<br><br>
 
-<!-- Searched device display bar -->
-<ol class="breadcrumb">
-  <li class="breadcrumb-item">
-    <a href="#">Showing result for </a>
-  </li>
-  <li class="breadcrumb-item active">{{ device_name }}</li>
-</ol>
-
-<div class="modal-body">
-    <div class="form-group row">
-        <div class="col-sm-3 col-form-label bg-light">System Name</div>
-        {%  if  system_name is defined %}
-            <div class="col-sm-1 col-form-label">:</div>
-            <div class="col-sm-8 col-form-label bg-light">{{ system_name | safe }}</div>
-        {% endif %}
+    <!-- RAM Usage Chart -->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fas fa-chart-area"></i>
+            Ram Usage Over Time</div>
+        <div class="card-body">
+            <canvas id="ramUsageChart" width="100%" height="30"></canvas>
+        </div>
+        <div class="card-footer small text-muted">Last Updated - {{ ram_last_updated | safe }}</div>
     </div>
-    <div class="form-group row">
-        <div class="col-sm-3 col-form-label bg-light">Operating System</div>
-        {%  if  os_details is defined %}
-            <div class="col-sm-1 col-form-label">:</div>
-            <div class="col-sm-8 col-form-label bg-light">{{ os_details | safe }}</div>
-        {% endif %}
+
+    <!-- DataTables for showing connections -->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fas fa-table"></i>
+            LLDP Connections</div>
+        <div class="card-body">
+            <div class="table-responsive">
+
+                {{ lldp_table | safe }}
+
+            </div>
+        </div>
+        <div class="card-footer small text-muted">Last Updated - {{ lldp_last_updated | safe }}</div>
     </div>
-    <div class="form-group row">
-        <div class="col-sm-3 col-form-label bg-light">Up time</div>
-        {%  if  up_time is defined %}
-            <div class="col-sm-1 col-form-label">:</div>
-            <div class="col-sm-8 col-form-label bg-light">{{ up_time | safe }} Hours</div>
-        {% endif %}
+
+    <!-- Unused Ports -->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fas fa-unlink"></i>
+            Unused Ports</div>
+        <div class="card-body">
+            <div class="form-row align-items-center">
+
+                {{ unused_ports | safe }}
+
+            </div>
+        </div>
+        <div class="card-footer small text-muted">Last Updated - {{ unused_ports_last_updated | safe }}</div>
     </div>
-    <div class="form-group row">
-        <div class="col-sm-3 col-form-label bg-light">Available RAM</div>
-        {%  if  total_ram is defined %}
-            <div class="col-sm-1 col-form-label">:</div>
-            <div class="col-sm-8 col-form-label bg-light">{{ total_ram | safe }} MB</div>
-        {% endif %}
+
+    <!-- Port Errors -->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fas fa-bug"></i>
+            Port Errors
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+
+                {{ port_error_table | safe }}
+
+            </div>
+        </div>
+        <div class="card-footer small text-muted">Last Updated - {{ port_error_last_updated | safe }}</div>
     </div>
-</div>
-
-
-<!-- CPU Usage Chart -->
-<div class="card mb-3">
-  <div class="card-header">
-    <i class="fas fa-chart-area"></i>
-    Percentage Of CPU Usage Over Time</div>
-  <div class="card-body">
-    <canvas id="cpuUsageChart" width="100%" height="30"></canvas>
-  </div>
-  <div class="card-footer small text-muted">Last Updated - {{ cpu_last_updated | safe }}</div>
-</div>
-
-
-<!-- RAM Usage Chart -->
-<div class="card mb-3">
-  <div class="card-header">
-    <i class="fas fa-chart-area"></i>
-    Ram Usage Over Time</div>
-  <div class="card-body">
-    <canvas id="ramUsageChart" width="100%" height="30"></canvas>
-  </div>
-  <div class="card-footer small text-muted">Last Updated - {{ ram_last_updated | safe }}</div>
-</div>
-
-<!-- DataTables for showing connections -->
-<div class="card mb-3">
-  <div class="card-header">
-    <i class="fas fa-table"></i>
-    LLDP Connections</div>
-  <div class="card-body">
-    <div class="table-responsive">
-
-      {{ data_table | safe }}
-
-    </div>
-  </div>
-  <div class="card-footer small text-muted">Last Updated - {{ lldp_last_updated | safe }}</div>
-</div>
-
 
 
 {% endblock %}
 
 
 {% block javaScript_file %}
-
-{% if cpu_x_axis is defined and  cpu_x_axis|length > 0
-and cpu_y_axis is defined and  cpu_y_axis|length > 0 %}
-<script type="text/javascript">
-
-    // Set new default font family and font color to mimic Bootstrap's default styling
-    Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-    Chart.defaults.global.defaultFontColor = '#292b2c';
-
-    //CPU Usage Chart
-    var cpuChartTemplate = document.getElementById("cpuUsageChart");
-    var cpuUsageLineChart = new Chart(cpuChartTemplate, {
-        type: 'line',
-        data: {
-            labels: {{ cpu_x_axis | safe }},
-    datasets: [{
-        label: "Usage (%)",
-        lineTension: 0.3,
-        backgroundColor: "rgba(2,117,216,0.2)",
-        borderColor: "rgba(2,117,216,1)",
-        pointRadius: 5,
-        pointBackgroundColor: "rgba(2,117,216,1)",
-        pointBorderColor: "rgba(255,255,255,0.8)",
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: "rgba(2,117,216,1)",
-        pointHitRadius: 50,
-        pointBorderWidth: 2,
-        data: {{ cpu_y_axis | safe }},
-    }],
-    },
-    options: {
-        scales: {
-            xAxes: [{
-                time: {
-                    unit: 'date'
-                },
-                gridLines: {
-                    display: false
-                },
-                ticks: {
-                    maxTicksLimit: 7
-                }
-            }],
-                yAxes: [{
-                ticks: {
-                    min: 0,
-                    max: 100,
-                    maxTicksLimit: 5
-                },
-                gridLines: {
-                    color: "rgba(0, 0, 0, .125)",
-                }
-            }],
-        },
-        legend: {
-            display: false
+    <!-- Script to show Processing animation once form submit button is pressed -->
+    <script>
+        function change_button_text()
+        {
+            document.getElementById("search_connection_btn").value="Processing....";
         }
-    }
-    });
-</script>
-{% endif %}
+    </script>
+    <!------------------------------------ End ----------------------------------->
 
+    <!-------------- Script to show the chart of CPU usage over time ------------->
+    {% if cpu_x_axis is defined and  cpu_x_axis|length > 0
+        and cpu_y_axis is defined and  cpu_y_axis|length > 0 %}
 
-{% if ram_x_axis is defined and  ram_x_axis|length > 0
-and ram_y_axis is defined and  ram_y_axis|length > 0 %}
-<script type="text/javascript">
+        <script type="text/javascript">
 
-    // Set new default font family and font color to mimic Bootstrap's default styling
-    Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-    Chart.defaults.global.defaultFontColor = '#292b2c';
+            // Set new default font family and font color to mimic Bootstrap's default styling
+            Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+            Chart.defaults.global.defaultFontColor = '#292b2c';
 
-    //CPU Usage Chart
-    var ramChartTemplate = document.getElementById("ramUsageChart");
-    var ramUsageLineChart = new Chart(ramChartTemplate, {
-        type: 'line',
-        data: {
-            labels: {{ ram_x_axis | safe }},
-    datasets: [{
-        label: "Usage (MB)",
-        lineTension: 0.3,
-        backgroundColor: "rgba(2,117,216,0.2)",
-        borderColor: "rgba(2,117,216,1)",
-        pointRadius: 5,
-        pointBackgroundColor: "rgba(2,117,216,1)",
-        pointBorderColor: "rgba(255,255,255,0.8)",
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: "rgba(2,117,216,1)",
-        pointHitRadius: 50,
-        pointBorderWidth: 2,
-        data: {{ ram_y_axis | safe }},
-    }],
-    },
-    options: {
-        scales: {
-            xAxes: [{
-                time: {
-                    unit: 'date'
+            //CPU Usage Chart
+            var cpuChartTemplate = document.getElementById("cpuUsageChart");
+            var cpuUsageLineChart = new Chart(cpuChartTemplate, {
+                type: 'line',
+                data: {
+                    labels: {{ cpu_x_axis | safe }},
+                    datasets: [{
+                        label: "Usage (%)",
+                        lineTension: 0.3,
+                        backgroundColor: "rgba(2,117,216,0.2)",
+                        borderColor: "rgba(2,117,216,1)",
+                        pointRadius: 5,
+                        pointBackgroundColor: "rgba(2,117,216,1)",
+                        pointBorderColor: "rgba(255,255,255,0.8)",
+                        pointHoverRadius: 5,
+                        pointHoverBackgroundColor: "rgba(2,117,216,1)",
+                        pointHitRadius: 50,
+                        pointBorderWidth: 2,
+                        data: {{ cpu_y_axis | safe }},
+                    }],
                 },
-                gridLines: {
-                    display: false
-                },
-                ticks: {
-                    maxTicksLimit: 7
+                options: {
+                    scales: {
+                        xAxes: [{
+                            time: {
+                                unit: 'date'
+                            },
+                            gridLines: {
+                                display: false
+                            },
+                            ticks: {
+                                maxTicksLimit: 7
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                min: 0,
+                                max: 100,
+                                maxTicksLimit: 5
+                            },
+                            gridLines: {
+                                color: "rgba(0, 0, 0, .125)",
+                            }
+                        }],
+                    },
+                    legend: {
+                        display: false
+                    }
                 }
-            }],
-                yAxes: [{
-                ticks: {
-                    min: 0,
-                    max: {{ total_ram }},
-                    maxTicksLimit: 5
+            });
+        </script>
+
+    {% endif %}
+    <!------------------------------------ End ----------------------------------->
+
+    <!-------------- Script to show the chart of RAM usage over time ------------->
+    {% if ram_x_axis is defined and  ram_x_axis|length > 0
+        and ram_y_axis is defined and  ram_y_axis|length > 0 %}
+
+        <script type="text/javascript">
+
+            // Set new default font family and font color to mimic Bootstrap's default styling
+            Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+            Chart.defaults.global.defaultFontColor = '#292b2c';
+
+            //CPU Usage Chart
+            var ramChartTemplate = document.getElementById("ramUsageChart");
+            var ramUsageLineChart = new Chart(ramChartTemplate, {
+                type: 'line',
+                data: {
+                    labels: {{ ram_x_axis | safe }},
+                    datasets: [{
+                        label: "Usage (MB)",
+                        lineTension: 0.3,
+                        backgroundColor: "rgba(2,117,216,0.2)",
+                        borderColor: "rgba(2,117,216,1)",
+                        pointRadius: 5,
+                        pointBackgroundColor: "rgba(2,117,216,1)",
+                        pointBorderColor: "rgba(255,255,255,0.8)",
+                        pointHoverRadius: 5,
+                        pointHoverBackgroundColor: "rgba(2,117,216,1)",
+                        pointHitRadius: 50,
+                        pointBorderWidth: 2,
+                        data: {{ ram_y_axis | safe }},
+                    }],
                 },
-                gridLines: {
-                    color: "rgba(0, 0, 0, .125)",
+                options: {
+                    scales: {
+                        xAxes: [{
+                            time: {
+                                unit: 'date'
+                            },
+                            gridLines: {
+                                display: false
+                            },
+                            ticks: {
+                                maxTicksLimit: 7
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                min: 0,
+                                max: {{ total_ram }},
+                                maxTicksLimit: 5
+                            },
+                            gridLines: {
+                                color: "rgba(0, 0, 0, .125)",
+                            }
+                        }],
+                    },
+                    legend: {
+                        display: false
+                    }
                 }
-            }],
-        },
-        legend: {
-            display: false
-        }
-    }
-    });
+            });
 
-</script>
+        </script>
 
-<!-- Script to show Processing animation once form submit button is pressed -->
-<script>
-    function change_button_text()
-    {
-        document.getElementById("search_connection_btn").value="Processing....";
-    }
-</script>
-
-{% endif %}
+    {% endif %}
+    <!------------------------------------ End ----------------------------------->
 {% endblock %}
 
