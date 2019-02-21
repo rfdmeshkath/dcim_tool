@@ -1,12 +1,15 @@
 import pandas as pd
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, request, send_from_directory, session
 
-from device_details import collect_data_for_device
+from apps.device_details import collect_data_for_device
+from authentication.ldap_auth import requires_auth
 
 app = Flask(__name__)
+app.secret_key = 'key'
 
 
 @app.route('/', methods=['GET', 'POST'])
+@requires_auth
 def home():
     session_username = 'Rafid'
     if request.method == 'GET':
@@ -14,6 +17,7 @@ def home():
 
 
 @app.route('/device-details', methods=['GET', 'POST'])
+@requires_auth
 def device_details():
     session_username = 'Rafid'
     if request.method == 'GET':
@@ -25,16 +29,22 @@ def device_details():
         device_data = collect_data_for_device(device_name)
 
         return render_template('device_details.html', user_name=session_username, device_name=device_name,
-                               system_namr=device_data['system_name'], os_details=device_data['os_details'],
+                               system_name=device_data['system_name'], os_details=device_data['os_details'],
                                up_time=device_data['up_time'], total_ram=device_data['total_ram'],
                                cpu_x_axis=device_data['memory_timeline'], cpu_y_axis=device_data['cpu_usages'],
                                cpu_last_updated=device_data['memory_last_updated'],
                                ram_x_axis=device_data['memory_timeline'], ram_y_axis=device_data['ram_usages'],
                                ram_last_updated=device_data['memory_last_updated'],
-                               data_table=device_data['lldp_connections_table'], lldp_last_updated=device_data['lldp_last_updated'])
+                               lldp_table=device_data['lldp_connections_table'],
+                               lldp_last_updated=device_data['lldp_last_updated'],
+                               unused_ports=device_data['unused_ports'],
+                               unused_ports_last_updated=device_data['unused_ports_last_updated'],
+                               port_error_table=device_data['port_error_table'],
+                               port_error_last_updated=device_data['port_error_last_updated'])
 
 
 @app.route('/connections', methods=['GET', 'POST'])
+@requires_auth
 def search_connections():
     session_username = 'Rafid'
     if request.method == 'GET':
@@ -58,6 +68,7 @@ def search_connections():
 
 
 @app.route('/upload-connections', methods=['GET', 'POST'])
+@requires_auth
 def upload_connections():
     session_username = 'Rafid'
     if request.method == 'GET':
@@ -66,8 +77,7 @@ def upload_connections():
             and request.files:
         connections_file = request.files['file']
         connections_df = pd.read_excel(connections_file)
-        connections = connections_df.to_html(classes=['table table-bordered'], header=True,
-                                             index=False)
+        connections = connections_df.to_html(classes=['table table-bordered'], header=True, index=False)
         return render_template('upload_connections.html', user_name=session_username, connections_table=connections)
 
     elif request.method == 'POST' and request.form['btn_identifier'] == 'Download Template':
@@ -75,6 +85,11 @@ def upload_connections():
 
     else:
         return render_template('upload_connections.html', user_name=session_username)
+
+
+@app.route('/authentication-error', methods=['GET', 'POST'])
+def authentication_required():
+    return render_template('authentication_required.html')
 
 
 if __name__ == '__main__':
