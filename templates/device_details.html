@@ -140,7 +140,7 @@
 {% endblock %}
 
 
-{% block javaScript_file %}
+{% block extra_javaScript %}
     <!-- Script to show Processing animation once form submit button is pressed -->
     <script>
         function change_button_text()
@@ -155,7 +155,6 @@
         and cpu_y_axis is defined and  cpu_y_axis|length > 0 %}
 
         <script type="text/javascript">
-
             // Set new default font family and font color to mimic Bootstrap's default styling
             Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
             Chart.defaults.global.defaultFontColor = '#292b2c';

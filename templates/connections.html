@@ -38,6 +38,15 @@
     <button class="btn btn-primary mb-2" onclick="window.location.href='/upload-connections';">Upload Multiple Connections</button>
 </div>
 
+<br>
+<br>
+<div class="form-inline justify-content-center">
+    <h6 class="text-success">{{ success }}</h6>
+    <h6 class="text-danger">{{ error }}</h6>
+</div>
+
+    {{ connections_table | safe }}
+
 <!-- Insert Single Connection Modal -->
 <div class="modal fade" id="connectionInsertModal" tabindex="-1" role="dialog" aria-labelledby="connectionInsertModalTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">

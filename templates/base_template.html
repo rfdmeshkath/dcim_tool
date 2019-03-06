@@ -3,118 +3,136 @@
 
 <head>
     {% block head %}
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
 
-    <title>{% block title %}{% endblock %} - NCMT</title>
+        <title>{% block title %}{% endblock %} - NMT</title>
 
-    <!-- Custom fonts for this template-->
-    <link href="{{ url_for('static',filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet"/>
+        <!-- Custom fonts for this template-->
+        <link href="{{ url_for('static',filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet"/>
 
-    <!-- Page level plugin CSS-->
-    <link href="{{ url_for('static',filename='vendor/datatables/dataTables.bootstrap4.css') }}" rel="stylesheet"/>
+        <!-- Page level plugin CSS-->
+        <link href="{{ url_for('static',filename='vendor/datatables/dataTables.bootstrap4.css') }}" rel="stylesheet"/>
 
-    <!-- Custom styles for this template-->
-    <link href="{{ url_for('static',filename='css/project.css') }}" rel="stylesheet"/>
+        <!-- Custom styles for this template-->
+        <link href="{{ url_for('static',filename='css/project.css') }}" rel="stylesheet"/>
 
     {% endblock %}
 </head>
 
 <body id="page-top">
 
-    <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
+<nav class="navbar navbar-expand navbar-dark bg-dark static-top">
 
-        <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
-            <i class="fas fa-bars"></i>
-        </button>
+    <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
+        <i class="fas fa-bars"></i>
+    </button>
 
-        <a class="navbar-brand mr-1" href="/">Network Connection Management Tool > {% block current_page %}{% endblock %}</a>
+    <a class="navbar-brand mr-1" href="/">Network Management Tool > {% block current_page %}{% endblock %}</a>
 
-        {% if user_name is defined %}
+    <!-- not to display any information unless user is logged in -->
+    {% if user_name is defined %}
         <!-- Navbar -->
         <ul class="navbar-nav ml-auto mr-0 mr-md-3 my-2 my-md-0">
-          <li class="nav-item dropdown no-arrow">
-            <a class="nav-link dropdown-toggle" href="#">
-              <i class="fas fa-user-circle fa-fw"></i>
-            </a>
-          </li>
-          <li class="nav-item dropdown no-arrow">
-            <a class="navbar-brand mr-1" href="#">Hi {{ user_name }}</a>
-          </li>
-        </ul>
-        {% endif %}
-
-    </nav>
-
-    <div id="wrapper">
-
-        <!-- Sidebar -->
-        <ul class="sidebar navbar-nav">
-            <li class= {% block glowing_home_in_side_bar %} "nav-item" {% endblock %}>
-                <a class="nav-link" href="/">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Home</span>
+            <!-- Notification Number -->
+            <li class="nav-item dropdown no-arrow mx-1">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="badge badge-danger">
+                        <div id="alert_notification"></div>
+                    </span>
                 </a>
             </li>
-
-            <li class={% block glowing_deviceDetails_in_side_bar %}"nav-item"{% endblock %}>
-                <a class="nav-link" href="/device-details">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Device Details</span></a>
+            <!-- Bell icon -->
+            <li class="nav-item dropdown no-arrow">
+                <a class="nav-link active" href="/" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-bell fa-fw"></i>
+                </a>
             </li>
-
-            <li class={% block glowing_connections_in_side_bar %}"nav-item"{% endblock %}>
-                <a class="nav-link" href="/connections">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Connections</span></a>
+            <!-- User icon -->
+            <li class="nav-item dropdown no-arrow">
+                <a class="nav-link active" href="#">
+                    <i class="fas fa-user-circle fa-fw"></i>
+                </a>
             </li>
-
+            <!-- User name -->
+            <li class="nav-item dropdown no-arrow">
+                <a class="navbar-brand mr-1" href="#">Hi {{ user_name }}</a>
+            </li>
         </ul>
+    {% endif %}
 
-        <div id="content-wrapper">
+</nav>
 
-            {% block content %}{% endblock %}
+<div id="wrapper">
 
-            <!-- Sticky Footer -->
-            <footer class="sticky-footer">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright © Network Connection Management Tool 2019</span>
-                    </div>
+    <!-- Sidebar -->
+    <ul class="sidebar navbar-nav">
+        <li class= {% block glowing_home_in_side_bar %} "nav-item" {% endblock %}>
+            <a class="nav-link" href="/">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>Home</span>
+            </a>
+        </li>
+
+        <li class={% block glowing_deviceDetails_in_side_bar %}"nav-item"{% endblock %}>
+            <a class="nav-link" href="/device-details">
+                <i class="fas fa-fw fa-chart-area"></i>
+                <span>Device Details</span></a>
+        </li>
+
+        <li class={% block glowing_connections_in_side_bar %}"nav-item"{% endblock %}>
+            <a class="nav-link" href="/connections">
+                <i class="fas fa-fw fa-table"></i>
+                <span>Connections</span></a>
+        </li>
+
+    </ul>
+
+    <div id="content-wrapper">
+
+        {% block content %}{% endblock %}
+
+        <!-- Sticky Footer -->
+        <footer class="sticky-footer">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Copyright © Network Management Tool 2019</span>
                 </div>
-            </footer>
-        </div>
-        <!-- /.content-wrapper -->
+            </div>
+        </footer>
     </div>
+    <!-- /.content-wrapper -->
+</div>
 
 
-    <!-- Scroll to Top Button -->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
+<!-- Scroll to Top Button -->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
 
-    <!-- Bootstrap core JavaScript -->
-    <script type="text/javascript" src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript" src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
-    <!-- Core plugin JavaScript -->
-    <script type="text/javascript" src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+<!-- Core plugin JavaScript -->
+<script type="text/javascript" src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
 
-    <!-- Page level plugin JavaScript -->
-    <script type="text/javascript" src="{{ url_for('static', filename='vendor/chart.js/Chart.min.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='vendor/datatables/jquery.dataTables.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.js') }}"></script>
+<!-- Page level plugin JavaScript -->
+<script type="text/javascript" src="{{ url_for('static', filename='vendor/chart.js/Chart.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='vendor/datatables/jquery.dataTables.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.js') }}"></script>
 
-    <!-- Custom scripts for all pages -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/project.min.js') }}"></script>
+<!-- Custom scripts for all pages -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/project.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/notification-updater.js') }}"></script>
 
-    <!-- DataTable scripts for all pages -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/project-pages/datatables.js') }}"></script>
+<!-- DataTable scripts for all pages -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/project-charts/datatables.js') }}"></script>
 
-{% block javaScript_file %}{% endblock %}
+{% block extra_javaScript %}{% endblock %}
 
 </body>
 </html>

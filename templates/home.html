@@ -14,7 +14,13 @@
 <!----------body starts---------->
 {% block content %}
 
+    <div id="alert-body" class="modal-body"></div>
 
+    {% block extra_javaScript %}
+        <script
+                type="text/javascript" src="{{ url_for('static', filename='js/dashboard-alerts.js') }}">
+        </script>
+    {% endblock %}
 
 
 {% endblock %}

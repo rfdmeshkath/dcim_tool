@@ -1,0 +1,77 @@
+{% extends "base_template.html" %}
+
+{% block title %} Resolve Alert {% endblock %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+
+{% block current_page %} Resolve Alert {% endblock %}
+
+<!----------body starts---------->
+{% block content %}
+    <div class="container">
+
+    <form action="/resolve-alert/*"  method="POST">
+
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Alert ID</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" readonly="readonly" name="alert_id" value=" {{ alert_id }}">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Device Name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" readonly="readonly" name="device_name" value="{{ device_name }}">
+            </div>
+        </div>
+
+         <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Severity</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" readonly="readonly" name="severity" value="{{ severity }}">
+            </div>
+        </div>
+
+         <div class="form-group row">
+            <label class="col-form-label col-sm-2 pt-0">Issue Details</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" readonly="readonly" name="alert_details"
+                          placeholder="{{ alert_details }}" ></textarea>
+            </div>
+         </div>
+
+         <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Occurred Time</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" readonly="readonly" name="severity"
+                       value="{{ occurred_datetime }}">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 pt-0">Comment</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" placeholder="Description of how this issue was resolved"
+                          maxlength="495" name="comment" required></textarea>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Resolved Time</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="resolved_datetime" required>
+            </div>
+        </div>
+
+        <div class="float-right">
+            <input type="submit" class="btn btn-success" value="Resolve"/>
+        </div>
+    </form>
+    </div>
+
+{% endblock %}
