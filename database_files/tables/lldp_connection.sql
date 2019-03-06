@@ -1,4 +1,4 @@
-alter SESSION set NLS_DATE_FORMAT = 'DD-MM-YYYY HH24:MI:SS';
+ALTER SESSION set NLS_DATE_FORMAT = 'DD-MM-YYYY HH24:MI:SS';
 
 DROP TABLE lldp_connection;
 CREATE TABLE lldp_connection (
