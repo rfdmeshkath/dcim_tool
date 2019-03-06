@@ -16,6 +16,7 @@ def execute_query(select_statement):
         cursor.execute('ALTER SESSION SET NLS_DATE_FORMAT = \'DD-MM-YYYY HH24:MI:SS\'')
         db_data = cursor.execute(select_statement)
         data_df = pd.DataFrame(db_data.fetchall())
+        data_df = data_df.fillna('')
 
     except Exception as e:
         print('error logging will go here ' + str(e))

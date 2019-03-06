@@ -223,16 +223,95 @@ def select_ignored_error(device_name):
     return select_statement
 
 
-a = '''SELECT 
-    x.device_name, 
-    a.local_port
-FROM 
-    device x, 
-    lldp_connection a
-WHERE 
-    a.local_device_id = x.device_id
-    AND
-    device_name='local-device-1'
-    AND
-    local_port='eth1'
-'''
+def select_total_alerts():
+    select_statement = '''
+    SELECT 
+        COUNT(*) 
+    FROM 
+        dashboard_alert
+    WHERE
+        resolved_status = 0
+    '''
+    return select_statement
+
+
+def select_all_alerts_info():
+    select_statement = '''
+    SELECT 
+        dashboard_id,
+        device_name,
+        severity,
+        alert_details,
+        occurred_datetime
+    FROM 
+        dashboard_alert
+    WHERE 
+        resolved_status = 0
+    '''
+    return select_statement
+
+
+def select_alert_info(dashboard_id):
+    select_statement = '''
+    SELECT 
+        dashboard_id,
+        device_name, 
+        severity, 
+        alert_details, 
+        occurred_datetime 
+    FROM
+        dashboard_alert
+    WHERE
+        dashboard_id = {}
+    '''.format(dashboard_id)
+    return select_statement
+
+
+def select_all_connections(searched_item):
+    select_satement = '''
+    SELECT 
+        a.mc_id                 connection_id, 
+        x.device_name           local_device, 
+        a.mc_local_port         local_port, 
+        y.device_name           remote_device,  
+        a.mc_remote_port        remote_port,
+        a.mc_interconnect_1     interconnect_1,
+        a.mc_interconnect_2     interconnect_2
+    FROM 
+        device x, 
+        device y, 
+        manual_connection a
+    WHERE 
+        a.mc_local_device_id = x.device_id 
+        AND  
+        a.mc_remote_device_id = y.device_id
+        AND 
+        a.mc_is_active = 1
+        AND
+        x.device_name LIKE '%{}%'
+    '''.format(searched_item)
+    return select_satement
+
+
+def select_connection_for_edit(connection_id):
+    select_statement = '''
+    SELECT 
+        a.mc_id                 connection_id, 
+        x.device_name           local_device, 
+        a.mc_local_port         local_port, 
+        y.device_name           remote_device,  
+        a.mc_remote_port        remote_port,
+        a.mc_interconnect_1     interconnect_1,
+        a.mc_interconnect_2     interconnect_2
+    FROM 
+        device x, 
+        device y, 
+        manual_connection a
+    WHERE 
+        a.mc_local_device_id = x.device_id 
+        AND  
+        a.mc_remote_device_id = y.device_id
+        AND
+        a.mc_id = '{}'
+        '''.format(connection_id)
+    return select_statement
