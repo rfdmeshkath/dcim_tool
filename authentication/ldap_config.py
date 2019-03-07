@@ -1,3 +1,3 @@
 def allowed_access(username, password):
-    if username == 'rafid' and password == 'asd':
+    if username == 'asd' and password == 'asd':
         return True

@@ -17,16 +17,16 @@ function getAlertsInfo() {
                                             '</strong>'+ alert.device_name +
                                             ' || <strong>Message: </strong>' + alert.error_details +
                                             ' || <strong>Occured: </strong>' + alert.date_time + '    ' +
-                                            '<a href=" '+ link +'"class="btn btn-outline-secondary btn-sm" ' +
-                                            'style="float: right;" role="button">Resolve</a>' +
+                                            '<a href=" '+ link +'"class="btn btn-outline-secondary btn-sm float-right"' +
+                                            ' role="button">Resolve</a>' +
                                             '</div>';
                 } else if (alert.severity === 'warning'){
                     alertBody.innerHTML += '<div class="alert alert-warning" role="alert"><strong>Device: ' +
                                             '</strong>'+ alert.device_name +
                                             ' || <strong>Message: </strong>' + alert.error_details +
                                             ' || <strong>Occured: </strong>' + alert.date_time + '    ' +
-                                            '<a href=" '+ link +'"class="btn btn-outline-secondary btn-sm" ' +
-                                            'style="float: right;" role="button">Resolve</a>' +
+                                            '<a href=" '+ link +'"class="btn btn-outline-secondary btn-sm float-right"' +
+                                            ' role="button">Resolve</a>' +
                                             '</div>';
 
                 } else if(alert.severity === 'danger'){
@@ -34,8 +34,8 @@ function getAlertsInfo() {
                                             '</strong>'+ alert.device_name +
                                             ' || <strong>Message: </strong>' + alert.error_details +
                                             ' || <strong>Occured: </strong>' + alert.date_time + '    ' +
-                                            '<a href=" '+ link +'"class="btn btn-outline-secondary btn-sm" ' +
-                                            'style="float: right;" role="button">Resolve</a>' +
+                                            '<a href=" '+ link +'"class="btn btn-outline-secondary btn-sm float-right"' +
+                                            ' role="button">Resolve</a>' +
                                             '</div>';
                 }else {
                     console.log('severity type error');

@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import request, Response, render_template
+from flask import request, Response, render_template, session
 
 from authentication.ldap_config import allowed_access
 
@@ -15,6 +15,7 @@ def requires_auth(f):
         if not auth or not check_auth(auth.username, auth.password):
             return Response(render_template('authentication_required.html'), 401,
                             {'WWW-Authenticate': 'Basic realm="Login Required"'})
-
-        return f(*args, **kwargs)
+        else:
+            session['username'] = auth.username
+            return f(*args, **kwargs)
     return decorated

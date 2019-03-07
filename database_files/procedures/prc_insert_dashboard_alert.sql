@@ -1,4 +1,4 @@
-create or replace PROCEDURE prc_insert_dashboard_alert
+CREATE OR REPLACE PROCEDURE prc_insert_dashboard_alert
 -- l at the beginning of a variable represents that its a local variable used within the function
 (
     l_device_name         IN VARCHAR2,
@@ -9,6 +9,7 @@ create or replace PROCEDURE prc_insert_dashboard_alert
 )
 IS
     alert_checker         NUMBER;
+    l_dashboard_id        NUMBER;
 
 BEGIN
     dbms_output.put_line('running fnc_check_if_alert_exists......');
@@ -37,11 +38,28 @@ BEGIN
             0
         );
 
-        dbms_output.put_line('Insert successfull. commiting.....');
-        COMMIT;
+    dbms_output.put_line('running fnc_check_dashboard_id');
+    l_dashboard_id  := fnc_check_dashboard_id(l_device_name, l_alert_code);
+
+    INSERT INTO notification_status
+    (
+        notification_id,
+        text_message,
+        email
+    )
+    VALUES
+    (
+        l_dashboard_id,
+        0,
+        0
+    );
+
+    dbms_output.put_line('Insert successfull. commiting');
+    COMMIT;
     END IF;
 
 EXCEPTION
 WHEN OTHERS THEN
+    ROLLBACK;
    raise_application_error(-20001,'An error was encountered - '||SQLCODE||' -ERROR- '||SQLERRM);
 END;
