@@ -1,4 +1,5 @@
 import smtplib
+from time import sleep
 
 from config import MAIL_CREDENTIAL
 
@@ -19,9 +20,7 @@ def send_email(recipient, subject, body):
     server.login(MAIL_CREDENTIAL['username'], MAIL_CREDENTIAL['password'])
     server.sendmail(MAIL_CREDENTIAL['username'], TO, message)
     server.close()
-    print('successfully sent the alerts')
-    # except:
-    #     print ("failed to send alerts")
+    print('successfully sent')
 
 
-send_email('rfdmeshkath@gmail.com', 'Automated Mail Header', 'Mail Body goes here.')
+# send_email('rfdmeshkath@gmail.com', 'Automated Mail Header', 'body\n hi')

@@ -11,7 +11,7 @@ def send_message(phone_no='', message_body=''):
     :param message_body: message body
     :return: nothing for now
     """
-    client = Client(TWILIO_DETAILS['sid'], TWILIO_DETAILS['auth_token'])
+    client = Client(TWILIO_DETAILS['account_sid'], TWILIO_DETAILS['auth_token'])
 
     # Phone number given to you by Twilio
     # all message will come from this number
