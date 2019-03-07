@@ -315,3 +315,22 @@ def select_connection_for_edit(connection_id):
         a.mc_id = '{}'
         '''.format(connection_id)
     return select_statement
+
+
+def select_notification_status(device_name, alert_code):
+    select_statement = '''
+    SELECT
+        notification_id,
+        text_message,
+        email
+    FROM 
+        notification_status x,
+        dashboard_alert     y
+    WHERE
+        x.notification_id = y.dashboard_id
+        AND
+        y.device_name = '{}'
+        AND
+        y.alert_code = '{}'
+    '''.format(device_name, alert_code)
+    return select_statement
