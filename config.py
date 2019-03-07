@@ -1,37 +1,37 @@
 CISCO_LOGIN_INFO = {
     'device_type': '',
     'ip': '',
-    'username': 'rafid',
-    'password': 'cisco',
+    'username': '',
+    'password': '',
 }
 
 DATABASE_CREDENTIAL = {
-    'user': 'fyp_project',
-    'password': 'fyp_project',
+    'user': '',
+    'password': '',
     'dsn': ''
 }
 
 DATABASE_DSN = {
-    'host': 'localhost',
-    'port': '1521',
-    'sid': 'xe'
+    'host': '',
+    'port': '',
+    'sid': ''
 }
 
 TWILIO_DETAILS = {
-    'account_sid': 'AC7a988332a024a8ab8aeaa6526e2e4863',
-    'auth_token': '430b39388e991c940f3b5b2e1ffa4eb8',
-    'number': '+18507249675'
+    'account_sid': '',
+    'auth_token': '',
+    'number': ''
 
 }
 
 MAIL_CREDENTIAL = {
-    'username': 'rafidmproject@gmail.com',
-    'password': 'FinalYearProject2019'
+    'username': '',
+    'password': ''
 }
 
 SNMP_DETAILS = {
-    'community_string': 'fypreadsnmp',
-    'port': 161
+    'community_string': '',
+    'port': 
 }
 
 SNMP_OID = {
@@ -50,11 +50,11 @@ SEVERITY = {
     'host_unreachable': 'danger'
 }
 
-MONITOR_PHONE = ['+353874323320']
+MONITOR_PHONE = [']
 
-MONITOR_EMAIL = ['rfdmeshkath@gmail.com']
+MONITOR_EMAIL = ['']
 
-all_devices = ['R1']
+all_devices = ['']
 
 
 
