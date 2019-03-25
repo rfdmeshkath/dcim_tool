@@ -1,4 +1,4 @@
-create or replace FUNCTION fnc_check_if_alert_exists 
+CREATE OR REPLACE FUNCTION fnc_check_if_alert_exists
 (
     l_device_name  IN VARCHAR2,
     l_alert_code   IN VARCHAR2
@@ -15,7 +15,7 @@ create or replace FUNCTION fnc_check_if_alert_exists
     WHERE
         device_name = l_device_name
     AND
-        alert_code = l_alert_code
+        alert_code LIKE  ('%' || l_alert_code || '%')
     AND
         resolved_status = 0;
 
