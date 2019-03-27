@@ -188,3 +188,7 @@ class Cisco_3700:
         error_df = self.get_errors(error_str)
 
         return connection_df, ram_df, cpu_df, unused_port_df, error_df
+
+
+# connection_df, ram_df, cpu_df, unused_port_df, error_df = Cisco_3700('R1').formatted_output()
+# print(connection_df, ram_df, cpu_df, unused_port_df, error_df )

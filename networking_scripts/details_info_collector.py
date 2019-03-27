@@ -10,16 +10,17 @@ for device in all_devices:
         connection_df, ram_df, cpu_df, unused_port_df, error_df = Cisco_3700(device).formatted_output()
 
         # update or insert these data to database
-        con_status = execute_procedure('prc_insert_lldp_connection',
-                                       [
-                                           connection_df['local_device'][0],
-                                           connection_df['local_port'][0],
-                                           connection_df['remote_device'][0],
-                                           connection_df['remote_port'][0],
-                                           connection_df['date_time'][0]
-                                       ])
-        if con_status != 'success':
-            print('failed ' + con_status)
+        for index, row in connection_df.iterrows():
+            insert_status = execute_procedure('prc_insert_lldp_connection',
+                                           [
+                                               row['local_device'],
+                                               row['local_port'],
+                                               row['remote_device'],
+                                               row['remote_port'],
+                                               row['date_time']
+                                           ])
+            if insert_status != 'success':
+                print('failed ' + insert_status)
 
         mem_status = execute_procedure('prc_insert_memory_usage',
                                        [
@@ -57,3 +58,6 @@ for device in all_devices:
 
             if port_error_status != 'success':
                 print('failed ' + port_error_status)
+
+    else:
+        print('Failed to connect to device {}'.format(device))

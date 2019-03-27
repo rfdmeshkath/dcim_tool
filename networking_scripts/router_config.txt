@@ -68,3 +68,85 @@ snmp-server community fypreadsnmp ro
 end
 
 
+
+#######################################################################################################################
+
+R2:
+=========================================
+conf t
+int fa0/0
+ip address 10.0.0.1 255.0.0.0
+no shut
+exit
+int fa0/1
+ip address 192.168.1.1 255.255.255.0
+no shut
+exit
+router ospf 1
+network 10.0.0.0 0.255.255.255 area 0
+network 192.168.1.0 0.0.0.255 area 0
+exit
+ip domain-name fyp.com
+username rafid password cisco
+crypto key generate rsa
+1024
+line vty 0 4
+transport input ssh
+login local
+end
+
+
+
+R1:
+=========================================
+conf t
+int fa0/0
+ip address 10.0.0.2 255.0.0.0
+no shut
+exit
+int fa0/1
+ip address 11.0.0.1 255.0.0.0
+no shut
+exit
+router ospf 1
+network 10.0.0.0 0.255.255.255 area 0
+network 11.0.0.0 0.255.255.255 area 0
+exit
+ip domain-name fyp.com
+username rafid password cisco
+crypto key generate rsa
+1024
+line vty 0 4
+transport input ssh
+login local
+end
+
+
+
+
+R2:
+=========================================
+conf t
+int fa0/0
+ip address 11.0.0.2 255.0.0.0
+no shut
+exit
+int fa0/1
+ip address 192.168.3.1 255.255.255.0
+no shut
+exit
+router ospf 1
+network 11.0.0.0 0.255.255.255 area 0
+network 192.168.3.0 0.0.0.255 area 0
+exit
+ip domain-name fyp.com
+username rafid password cisco
+crypto key generate rsa
+1024
+line vty 0 4
+transport input ssh
+login local
+end
+
+
+
