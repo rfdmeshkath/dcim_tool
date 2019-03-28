@@ -3,7 +3,7 @@ CREATE TABLE dashboard_alert
 (
     dashboard_id        NUMBER             NOT NULL,
     device_name         VARCHAR2(50),
-    alert_code          VARCHAR2(50)       NOT NULL,
+    alert_code          VARCHAR2(100)      NOT NULL,
     severity            VARCHAR2(15)       DEFAULT 'danger',
     alert_details       VARCHAR2(50),
     occurred_datetime    DATE               NOT NULL,
