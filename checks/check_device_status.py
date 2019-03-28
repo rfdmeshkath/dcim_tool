@@ -28,7 +28,6 @@ def downstate_checker(devices_list, error_severity=SEVERITY['host_unreachable'])
     """
     not_reachable = check_if_device_is_reachable(devices_list)
     unreachable_hosts_df = pd.DataFrame(columns=['device_name', 'code', 'error_severity', 'message', 'date_time'])
-    print(not_reachable)
     if len(not_reachable) > 0:
         date_time = get_date_time()
         counter = 0

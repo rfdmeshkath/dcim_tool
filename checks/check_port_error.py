@@ -3,7 +3,6 @@ import pandas as pd
 from checks.process_alerts import insert_alerts_to_db
 from config import all_devices, SEVERITY
 from database_helper.query import execute_query
-from database_helper.procedures import execute_procedure
 from database_helper.sql_statements import select_input_error, select_crc_error, select_frame_error, \
     select_overrun_error, select_ignored_error
 
