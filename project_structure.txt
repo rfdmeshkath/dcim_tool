@@ -1,0 +1,60 @@
+/root
+    - /alerts
+        email.py
+        message.py
+
+    - /apps
+        alerts_api.py
+        connections.py
+        device_details.py
+        edit_connections.py
+        resolve_alerts.py
+
+    - /authentication
+        ldap_auth.py
+        ldap_config.py
+
+    - /checks
+        check_device_status.py
+        check_disconnected_connection.py
+        check_memory.py
+        check_port_error.py
+        process_alerts.py
+
+    - /database_helper
+        db_connection.py
+        procedures.py
+        query.py
+        sql_statements.py
+
+    - /networking_script
+        basic_info_collector.py
+        details_info_collector.py
+        device_scripts.py
+        ping.py
+        snmp.py
+
+    - /required_files
+        connections.csv
+        Template.xlsx
+
+    - /static
+        /css
+        /js
+        /vendor
+
+    - /templates
+        authentication_required.html
+        base_template.html
+        connections.html
+        device_details.html
+        edit_connection.html
+        error.html
+        home.html
+        resolve_alert.html
+        upload_connection.html
+
+    config.py
+    web_app.py
+    main.py
+
