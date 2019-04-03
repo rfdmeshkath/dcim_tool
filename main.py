@@ -4,11 +4,13 @@ from flask import Flask, render_template, request, send_from_directory, session,
 
 from apps.connections import insert_single_connection, get_connections
 from apps.edit_connections import get_connection_details, change_manual_connection, delete_manual_connection
+from apps.push_commands import get_user_inputs, execute_commands
 from apps.resolve_alert import get_alert_info, resolve_alert_in_db
-from apps.upload_connection import file_error_check
+from apps.upload_connection import file_error_check, multiple_connection_insert
 from authentication.ldap_auth import requires_auth
 from apps.alerts_api import total_alerts_for_notification_icon, all_alerts_info
 from apps.device_details import collect_data_for_device
+from config import PRE_WRITTEN_COMMANDS
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'key'
@@ -149,19 +151,47 @@ def upload_connections():
     user = session.get('username')
     if request.method == 'GET':
         return render_template('upload_connections.html', user_name=user)
-    elif request.method == 'POST' and request.form['btn_identifier'] == 'Upload Excel File' \
+
+    # actions for button "Upload Excel File"
+    elif request.method == 'POST' \
+            and request.form['btn_identifier'] == 'Upload Excel File' \
             and request.files:
         connections_file = request.files['file']
-        file_error_check(connections_file)
-        connections_df = pd.read_excel(connections_file)
-        connections = connections_df.to_html(classes=['table table-bordered'], header=True, index=False)
-        return render_template('upload_connections.html', user_name=user, connections_table=connections)
+        check_report, connections_df = file_error_check(connections_file)
 
+        if check_report == 'success':
+            connections_table = connections_df.to_html(classes=['table table-bordered'], header=True,
+                                                       index=False, na_rep='')
+            return render_template('upload_connections.html', user_name=user, connections_table=connections_table)
+        else:
+            return render_template('upload_connections.html', user_name=user, message=check_report)
+
+    # actions for button "Download Template"
     elif request.method == 'POST' and request.form['btn_identifier'] == 'Download Template':
         return send_from_directory(directory='required_files', filename='Template.xlsx', as_attachment=True)
 
+    # actions for button "Insert"
+    elif request.method == 'POST' and request.form['btn_identifier'] == 'Insert':
+        success_table, error_table = multiple_connection_insert()
+        return render_template('upload_connections.html', user_name=user, error_message=error_table,
+                               success_message=success_table)
+
     else:
-        return render_template('upload_connections.html', user_name=user)
+        message = 'Choose the right Excel template'
+        return render_template('upload_connections.html', user_name=user, message=message)
+
+
+@app.route('/push-commands', methods=['GET', 'POST'])
+@requires_auth
+def send_commands():
+    user = session.get('username')
+    if request.method == 'GET':
+        return render_template('push_commands.html', user_name=user, command_list=PRE_WRITTEN_COMMANDS.keys())
+    else:
+        device_name, port_name, command_option = get_user_inputs(request.form)
+        status_s = execute_commands(device_name, port_name, command_option)
+        return render_template('push_commands.html', user_name=user, command_list=PRE_WRITTEN_COMMANDS.keys(),
+                               status=status_s)
 
 
 @app.route('/authentication-error', methods=['GET'])
@@ -171,4 +201,3 @@ def authentication_required():
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=80)
-    # app.run(debug=True)
