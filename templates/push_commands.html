@@ -1,0 +1,77 @@
+{% extends "base_template.html" %}
+
+{% block title %} Home {% endblock %}
+
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+
+{% block current_page %} Push Commands {% endblock %}
+
+{% block glowing_push_command_in_side_bar %}"nav-item active"{% endblock %}
+
+<!----------body starts---------->
+{% block content %}
+<div class="container">
+    <br><br>
+    <form action="/push-commands"  method="POST" class="form-inline justify-content-center">
+        <div class="form-row align-items-center">
+            <div class="col-auto">
+                <input type="text" name="device_name" id="device_name" class="form-control mb-2"
+                       placeholder="Device Name / IP" required>
+                <input type="text" name="port_name" id="port_name" class="form-control mb-2" placeholder="Port Name">
+
+                <select class="custom-select mb-2" name="command_option" required>
+                    <option selected></option>
+                    {% for x in command_list %}
+                        <option value="{{ x }}" >{{ x }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-auto">
+                <input onclick="change_button_text()" type="submit" class="btn btn-primary mb-2" value="Execute"
+                       id="execute_btn" />
+            </div>
+        </div>
+    </form>
+
+    <div style="text-align:center">
+
+        {% if status %}
+            <br><br>
+            <h4>Command Execution Status</h4>
+            <br><br>
+            {% for key, value in status.items() %}
+                {% if value == 'success' %}
+                    <h5 style="color: #36b600;">Device: {{ key }} | Status: {{ value }}</h5>
+                    <br>
+                {% else %}
+                    <h5 style="color: #ef0f00;">Device: {{ key }} | Status: {{ value }}</h5>
+                    <br>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+
+{% block extra_javaScript %}
+<!-- Script to show Processing animation once form submit button is pressed -->
+    <script>
+        function change_button_text()
+        {
+
+            if (document.getElementById('device_name').value !== ""
+                || document.getElementById('port_name').value !== "")
+            {
+                document.getElementById("execute_btn").value="Executing....";
+            }
+
+
+
+        }
+    </script>
+{% endblock %}

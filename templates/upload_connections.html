@@ -27,6 +27,25 @@
     </div>
 </div>
     <br><br>
+    <div style="text-align:center">
+    <h3>{{ message }}</h3>
+
+    {% if error_message %}
+        <div class="card-body">
+            <h4 style="color: #bd2130;">Failed to insert due to duplicate</h4>
+            <br>
+            {{ error_message | safe }}
+        </div>
+        <br>
+    {% endif %}
+
+    {% if success_message %}
+        <div class="card-body">
+            <h4 style="color: #36b600">Insert Successful</h4>
+            <br>
+            {{ success_message | safe }}
+        </div>
+    {% endif %}
 
     <div class="card-body">
         {{ connections_table | safe }}
@@ -35,10 +54,12 @@
     {% if connections_table is defined %}
         <br>
         <div class="form-inline justify-content-center">
+        <form action="/upload-connections" method="POST">
             <input type="submit" class="btn btn-primary mb-2" value="Insert" name="btn_identifier"/>
+        </form>
         </div>
         <br><br>
     {% endif %}
-
+</div>
 
 {% endblock %}
