@@ -334,3 +334,87 @@ def select_notification_status(device_name, alert_code):
         y.alert_code = '{}'
     '''.format(device_name, alert_code)
     return select_statement
+
+
+def select_second_highest_date(device_name):
+    select_statement = '''
+    SELECT 
+        MAX(updated_datetime) 
+    FROM 
+        lldp_connection
+    WHERE 
+        local_device_id = (SELECT fnc_check_device_id('{}') from DUAL)
+        AND
+        updated_datetime NOT IN 
+        (
+            SELECT 
+                MAX(updated_datetime) 
+            FROM 
+                lldp_connection
+            WHERE 
+                local_device_id = (SELECT fnc_check_device_id('{}') from DUAL)
+        )
+    '''.format(device_name, device_name)
+    return select_statement
+
+
+def select_disconnected_connections(device_name, datetime):
+    select_statement = '''
+    (SELECT 
+        x.device_name       local_device, 
+        a.local_port        local_port, 
+        y.device_name       remote_device,  
+        a.remote_port       remote_port
+    FROM 
+        device x, 
+        device y, 
+        lldp_connection a
+    WHERE 
+        a.local_device_id = x.device_id 
+        AND  
+        a.remote_device_id = y.device_id
+        AND
+        x.device_name = '{}'
+        AND
+        a.updated_datetime = '{}')
+    MINUS
+    (SELECT 
+            x.device_name       local_device, 
+            a.local_port        local_port, 
+            y.device_name       remote_device,  
+            a.remote_port       remote_port
+        FROM 
+            device x, 
+            device y, 
+            lldp_connection a
+        WHERE 
+            a.local_device_id = x.device_id 
+            AND  
+            a.remote_device_id = y.device_id
+            AND
+            x.device_name = '{}'
+            AND
+            a.updated_datetime = (SELECT MAX(updated_datetime) FROM lldp_connection))
+    '''.format(device_name, datetime, device_name)
+    return select_statement
+
+
+def select_latest_memory_usage(device_name):
+    select_statement = '''
+    SELECT 
+        x.device_name        device_name, 
+        a.ram_usage          ram_usage,
+        a.cpu_usage          cpu_usage,
+        a.updated_datetime   date_time
+    FROM 
+        device            x, 
+        memory_history    a
+    
+    WHERE 
+        a.m_device_id = x.device_id
+        AND 
+        x.device_name = '{}'
+        AND
+        a.updated_datetime = (SELECT MAX(updated_datetime) FROM memory_history)
+    '''.format(device_name)
+    return select_statement
