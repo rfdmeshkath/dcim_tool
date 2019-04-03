@@ -1,6 +1,6 @@
 from config import SNMP_OID, all_devices
 from database_helper.procedures import execute_procedure
-from networking_scripts.device_scripts import Cisco_3700
+from networking_scripts.device_scripts import Cisco_3700, Cisco_2900
 from networking_scripts.snmp import collect_snmp_data
 
 
@@ -11,7 +11,9 @@ for device in all_devices:
     # converting TimeTicks to hour
     up_time = round(int(up_time)/360000)
     total_ram = 0
-    if 'Cisco' in os_description:
+    if 'Cisco' in os_description and 'C2900' in os_description:
+        total_ram = Cisco_2900(device).get_total_ram()
+    elif 'Cisco' in os_description and '3700' in os_description:
         total_ram = Cisco_3700(device).get_total_ram()
 
     # print('\n', system_name, '\n', os_description, '\n', up_time, '\n', total_ram)
