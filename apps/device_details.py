@@ -70,5 +70,4 @@ def collect_data_for_device(device_name):
                                                                 index=False)
     return device_data
 
-# a = collect_data_for_device('R1')
-# print(a)
+
