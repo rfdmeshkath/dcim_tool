@@ -1,0 +1,33 @@
+{% extends "base_template.html" %}
+
+{% block title %} Home {% endblock %}
+
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+
+{% block current_page %} Ticket History {% endblock %}
+
+{% block glowing_ticket_history_in_side_bar %}"nav-item active"{% endblock %}
+
+<!----------body starts---------->
+{% block content %}
+
+    <form action="/ticket-history"  method="POST" class="form-inline justify-content-center">
+        <div class="form-row align-items-center">
+            <div class="col-auto">
+                <input type="text" name="searched_item" class="form-control mb-2" id="inlineFormInput" placeholder="">
+            </div>
+            <div class="col-auto">
+                <input type="submit" class="btn btn-primary mb-2" value="Search"
+                       id="search_connection_btn" />
+            </div>
+        </div>
+    </form>
+    <br><br>
+
+    {{ tickets_table | safe }}
+
+
+{% endblock %}

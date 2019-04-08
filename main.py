@@ -6,6 +6,7 @@ from apps.connections import insert_single_connection, get_connections
 from apps.edit_connections import get_connection_details, change_manual_connection, delete_manual_connection
 from apps.push_commands import get_user_inputs, execute_commands
 from apps.resolve_alert import get_alert_info, resolve_alert_in_db
+from apps.ticket_history import get_recent_tickets, get_searched_ticket
 from apps.upload_connection import file_error_check, multiple_connection_insert
 from authentication.ldap_auth import requires_auth
 from apps.alerts_api import total_alerts_for_notification_icon, all_alerts_info
@@ -50,11 +51,15 @@ def error():
 def resolve_alert(alert_id):
     user = session.get('username')
     if request.method == 'GET':
-        alert_info_df = get_alert_info(alert_id)
+        alert_info_dict = get_alert_info(alert_id)
+
         return render_template('resolve_alert.html', user_name=user,
-                               alert_id=alert_info_df['dashboard_id'][0], device_name=alert_info_df['device_name'][0],
-                               severity=alert_info_df['severity'][0], alert_details=alert_info_df['alert_details'][0],
-                               occurred_datetime=alert_info_df['occurred_datetime'][0])
+                               dashboard_id=alert_info_dict['dashboard_id'], device_name=alert_info_dict['device_name'],
+                               severity=alert_info_dict['severity'], alert_details=alert_info_dict['alert_details'],
+                               occurred_datetime=alert_info_dict['occurred_datetime'],
+                               resolved_hour=alert_info_dict['resolved_hour'],
+                               resolved_minute=alert_info_dict['resolved_minute'])
+
     elif request.method == 'POST':
         resolve_status = resolve_alert_in_db(request.form, user)
         if resolve_status != 'success':
@@ -192,6 +197,22 @@ def send_commands():
         status_s = execute_commands(device_name, port_name, command_option)
         return render_template('push_commands.html', user_name=user, command_list=PRE_WRITTEN_COMMANDS.keys(),
                                status=status_s)
+
+
+@app.route('/ticket-history', methods=['GET', 'POST'])
+@requires_auth
+def search_history():
+    user = session.get('username')
+    if request.method == 'GET':
+        recent_tickets_df = get_recent_tickets()
+        recent_tickets_table = recent_tickets_df.to_html(classes=['table table-bordered'], header=True, index=False,
+                                                         na_rep='')
+        return render_template('ticket_history.html', user_name=user, tickets_table=recent_tickets_table)
+    else:
+        searched_item = request.form.get('searched_item')
+        tickets_info_df = get_searched_ticket(searched_item)
+        tickets_table = tickets_info_df.to_html(classes=['table table-bordered'], header=True, index=False, na_rep='')
+        return render_template('ticket_history.html', user_name=user, tickets_table=tickets_table)
 
 
 @app.route('/authentication-error', methods=['GET'])

@@ -70,11 +70,11 @@ def port_checker(device_list, severity=SEVERITY['port_error']):
     return error_df
 
 
-def main():
+def port_error_main():
     alerts_df = port_checker(all_devices, SEVERITY['port_error'])
     if not alerts_df.empty:
         insert_alerts_to_db(alerts_df)
 
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     port_error_main()

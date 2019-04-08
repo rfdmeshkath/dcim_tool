@@ -418,3 +418,48 @@ def select_latest_memory_usage(device_name):
         a.updated_datetime = (SELECT MAX(updated_datetime) FROM memory_history)
     '''.format(device_name)
     return select_statement
+
+
+def select_resolved_dashboard_tickets(row_num=50):
+    select_statement ='''
+    SELECT 
+        device_name,
+        severity,
+        alert_details,
+        occurred_datetime,
+        resolved_comment,
+        resolved_datetime,
+        resolved_by
+    FROM
+        dashboard_alert
+    WHERE
+        resolved_status = 1
+        AND
+        ROWNUM < {}
+    '''.format(row_num)
+    return select_statement
+
+
+def select_searched_tickets(searched_item):
+    select_statement = '''
+    SELECT 
+    device_name,
+    severity,
+    alert_details,
+    occurred_datetime,
+    resolved_comment,
+    resolved_datetime,
+    resolved_by
+FROM
+    dashboard_alert
+WHERE
+    resolved_status = 1
+    AND
+    (
+    device_name LIKE \'%{dn}%\'
+    OR
+    alert_details LIKE \'%{ad}%\'
+    OR
+    resolved_by LIKE \'%{rb}%\'
+    )'''.format(dn=searched_item, ad=searched_item,rb=searched_item)
+    return select_statement

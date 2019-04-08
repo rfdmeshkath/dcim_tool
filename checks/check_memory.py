@@ -16,7 +16,7 @@ def utilization_checker(device_list, ram_threshold, cpu_threshold, ram_severity,
             for index, row in utilization_df.iterrows():
                 if row['ram_usage'] > ram_threshold:
                     code = 'high_ram_util'
-                    message = 'RAM utilization: ' + str(row['ram_usage'])
+                    message = 'RAM utilization: ' + str(row['ram_usage']) + '%'
                     alert_founded = str(row['date_time'].date().day) + '-' + \
                                     str(row['date_time'].date().month) + '-' + \
                                     str(row['date_time'].date().year) + ' ' + \
@@ -27,7 +27,7 @@ def utilization_checker(device_list, ram_threshold, cpu_threshold, ram_severity,
 
                 if row['cpu_usage'] > cpu_threshold:
                     code = 'high_cpu_util'
-                    message = 'CPU utilization: ' + str(row['cpu_usage'])
+                    message = 'CPU utilization: ' + str(row['cpu_usage']) + '%'
                     alert_founded = str(row['date_time'].date().day) + '-' + \
                                     str(row['date_time'].date().month) + '-' + \
                                     str(row['date_time'].date().year) + ' ' + \
@@ -41,12 +41,12 @@ def utilization_checker(device_list, ram_threshold, cpu_threshold, ram_severity,
     return error_df
 
 
-def main():
+def memory_main():
     alerts_df = utilization_checker(all_devices, UTILIZATION_THRESHOLD['ram'], UTILIZATION_THRESHOLD['cpu'],
                                     SEVERITY['ram_utilization'], SEVERITY['cpu_utilization'])
     if not alerts_df.empty:
         insert_alerts_to_db(alerts_df)
 
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     memory_main()

@@ -45,11 +45,11 @@ def disconnected_connection_checker(device_list, error_severity):
     return error_df
 
 
-def main():
+def disconnected_connection_main():
     alerts_df = disconnected_connection_checker(all_devices, SEVERITY['disconnected_connection'])
     if not alerts_df.empty:
         insert_alerts_to_db(alerts_df)
 
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     disconnected_connection_main()

@@ -41,11 +41,11 @@ def downstate_checker(devices_list, error_severity=SEVERITY['host_unreachable'])
         return pd.DataFrame()
 
 
-def main():
+def device_status_main():
     alerts_df = downstate_checker(all_devices, SEVERITY['host_unreachable'])
     if not alerts_df.empty:
         insert_alerts_to_db(alerts_df)
 
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     device_status_main()
